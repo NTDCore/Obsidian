@@ -5369,7 +5369,7 @@ function Library:CreateWindow(WindowInfo)
             20,
             TitleHolder.AbsoluteSize.X - (WindowInfo.Icon and WindowInfo.IconSize.X.Offset + 6 or 0) - 12
         )
-        New("TextLabel", {
+        local WindowTitle = New("TextLabel", {
             BackgroundTransparency = 1,
             Size = UDim2.new(0, X, 1, 0),
             Text = WindowInfo.Title,
@@ -5592,6 +5592,10 @@ function Library:CreateWindow(WindowInfo)
 
     --// Window Table \\--
     local Window = {}
+
+    function Window:SetWindowTitle(Title)
+        WindowTitle.Title = tostring(Title)
+    end
 
     function Window:AddTab(...)
         local Name = nil
