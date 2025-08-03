@@ -5594,7 +5594,7 @@ function Library:CreateWindow(WindowInfo)
     local Window = {}
 
     function Window:SetWindowTitle(Title)
-        WindowTitle.Title = tostring(Title)
+        WindowTitle.Text = tostring(Title)
     end
 
     function Window:AddTab(...)
