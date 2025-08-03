@@ -5259,6 +5259,7 @@ function Library:CreateWindow(WindowInfo)
     Library.ToggleKeybind = WindowInfo.ToggleKeybind
 
     local MainFrame
+    local WindowTitle
     local SearchBox
     local CurrentTabInfo
     local CurrentTabLabel
@@ -5369,7 +5370,7 @@ function Library:CreateWindow(WindowInfo)
             20,
             TitleHolder.AbsoluteSize.X - (WindowInfo.Icon and WindowInfo.IconSize.X.Offset + 6 or 0) - 12
         )
-        local WindowTitle = New("TextLabel", {
+        WindowTitle = New("TextLabel", {
             BackgroundTransparency = 1,
             Size = UDim2.new(0, X, 1, 0),
             Text = WindowInfo.Title,
