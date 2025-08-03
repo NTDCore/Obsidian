@@ -150,6 +150,12 @@ do
                 [[{"FontColor":"eeffff","MainColor":"212121","AccentColor":"82aaff","BackgroundColor":"151515","OutlineColor":"424242"}]]
             ),
         },
+        ['Vape'] = {
+            19,
+            httpService:JSONDecode(
+                [[{"FontColor":"ffffff","MainColor":"1c1c1c","AccentColor":"058568","BackgroundColor":"141414","OutlineColor":"323232"}]]
+            ),
+        },
     }
 
     function ThemeManager:SetLibrary(library)

@@ -2,7 +2,7 @@
 -- You can suggest changes with a pull request or something
 
 local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
-local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local Library = loadstring(readfile('GitHub/Obsidian/Library.lua'), 'Library')() --loadstring(game:HttpGet(repo .. "Library.lua"))()
 local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 
@@ -124,6 +124,24 @@ end)
 
 -- This should print to the console: "My toggle state changed! New value: false"
 Toggles.MyToggle:SetValue(false)
+
+local ConnectionExample = LeftGroupBox:AddToggle("MyConnectionToggle", {
+	Text = "This is a toggle with signal! (open console to see player joins)",
+	Tooltip = "This is a tooltip", -- Information shown when you hover over the toggle
+	DisabledTooltip = "I am disabled!", -- Information shown when you hover over the toggle while it's disabled
+
+	Default = true, -- Default value (true / false)
+	Disabled = false, -- Will disable the toggle (true / false)
+	Visible = true, -- Will make the toggle invisible (true / false)
+	Risky = false, -- Makes the text red (the color can be changed using Library.Scheme.Red) (Default value = false)
+
+	Callback = function(Value)
+		print("[cb] MyConnectionToggle changed to:", Value)
+		ConnectionExample:GiveSignal(game:GetService('Players').PlayerAdded:Connect(function(player)
+			print(player.DisplayName .. '(@' .. player.Name .. ') has joined the server.')
+		end))
+	end,
+})
 
 LeftGroupBox:AddCheckbox("MyCheckbox", {
 	Text = "This is a checkbox",

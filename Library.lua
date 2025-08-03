@@ -932,6 +932,29 @@ function Library:SetDPIScale(DPIScale: number)
     end
 end
 
+local function addMaid(t)
+	t.Signals = {}
+
+	function t:GiveSignal(c: RBXScriptConnection)
+		if typeof(c) == 'Instance' then
+			table.insert(self.Signals, {
+				Disconnect = function()
+					c:ClearAllChildren()
+					c:Destroy()
+				end
+			})
+		elseif type(c) == 'function' then
+			table.insert(self.Signals, {
+				Disconnect = c
+			})
+		else
+			table.insert(self.Signals, c)
+		end
+
+		return c
+	end
+end
+
 function Library:GiveSignal(Connection: RBXScriptConnection)
     table.insert(Library.Signals, Connection)
     return Connection
@@ -1802,6 +1825,12 @@ function Library:Unload()
 
     for _, Callback in pairs(Library.UnloadSignals) do
         Library:SafeCallback(Callback)
+    end
+
+    for _, v in Toggles do
+        if v.Value then
+            v:SetValue(not v.Value)
+        end
     end
 
     Library.Unloaded = true
@@ -3036,6 +3065,7 @@ do
 
             Callback = Info.Callback,
             Changed = Info.Changed,
+            Signals = {},
 
             Risky = Info.Risky,
             Disabled = Info.Disabled,
@@ -3044,6 +3074,8 @@ do
 
             Type = "Toggle",
         }
+
+        addMaid(Toggle)
 
         local Button = New("TextButton", {
             Active = not Toggle.Disabled,
@@ -3150,6 +3182,13 @@ do
                 end
             end
 
+            if not self.Value then
+                for _, v in self.Signals do
+                    v:Disconnect()
+                end
+                table.clear(self.Signals)
+            end
+
             Library:SafeCallback(Toggle.Callback, Toggle.Value)
             Library:SafeCallback(Toggle.Changed, Toggle.Value)
             Library:UpdateDependencyBoxes()
@@ -3237,6 +3276,7 @@ do
 
             Callback = Info.Callback,
             Changed = Info.Changed,
+            Signals = {},
 
             Risky = Info.Risky,
             Disabled = Info.Disabled,
@@ -3245,6 +3285,8 @@ do
 
             Type = "Toggle",
         }
+
+        addMaid(Toggle)
 
         local Button = New("TextButton", {
             Active = not Toggle.Disabled,
@@ -3368,6 +3410,13 @@ do
                     Addon.Toggled = Toggle.Value
                     Addon:Update()
                 end
+            end
+
+            if not self.Value then
+                for _, v in self.Signals do
+                    v:Disconnect()
+                end
+                table.clear(self.Signals)
             end
 
             Library:SafeCallback(Toggle.Callback, Toggle.Value)
