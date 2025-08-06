@@ -5605,7 +5605,7 @@ function Library:CreateWindow(WindowInfo)
             WindowTitle.Title,
             Library.Scheme.Font,
             20,
-            TitleHolder.AbsoluteSize.X - (WindowIcon.Image and Templates.Window.IconSize.X.Offset + 6 or 0) - 12
+            TitleHolder.AbsoluteSize.X - (icon and Templates.Window.IconSize.X.Offset + 6 or 0) - 12
         )
         WindowTitle.Size = UDim2.new(0, X, 1, 0)
     end
