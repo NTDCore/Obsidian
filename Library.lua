@@ -5267,6 +5267,7 @@ function Library:CreateWindow(WindowInfo)
     local ResizeButton
     local Tabs
     local Container
+    local WindowIcon
     do
         Library.KeybindFrame, Library.KeybindContainer = Library:AddDraggableMenu("Keybinds")
         Library.KeybindFrame.AnchorPoint = Vector2.new(0, 0.5)
@@ -5357,7 +5358,7 @@ function Library:CreateWindow(WindowInfo)
         })
 
         if WindowInfo.Icon then
-            New("ImageLabel", {
+            WindowIcon = New("ImageLabel", {
                 Image = if tonumber(WindowInfo.Icon) then `rbxassetid://{WindowInfo.Icon}` else WindowInfo.Icon,
                 Size = WindowInfo.IconSize,
                 Parent = TitleHolder,
@@ -5596,6 +5597,10 @@ function Library:CreateWindow(WindowInfo)
 
     function Window:SetWindowTitle(Title)
         WindowTitle.Text = tostring(Title)
+    end
+
+    function Window:SetIcon(icon)
+        WindowIcon.Image = if tonumber(icon) then `rbxassetid://{icon}` else icon
     end
 
     function Window:AddTab(...)
