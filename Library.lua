@@ -5599,17 +5599,6 @@ function Library:CreateWindow(WindowInfo)
         WindowTitle.Text = tostring(Title)
     end
 
-    function Window:SetIcon(icon)
-        WindowIcon.Image = if tonumber(icon) then `rbxassetid://{icon}` else icon
-        local X = Library:GetTextBounds(
-            WindowTitle.Title,
-            Library.Scheme.Font,
-            20,
-            TitleHolder.AbsoluteSize.X - (icon and Templates.Window.IconSize.X.Offset + 6 or 0) - 12
-        )
-        WindowTitle.Size = UDim2.new(0, X, 1, 0)
-    end
-
     function Window:AddTab(...)
         local Name = nil
         local Icon = nil
