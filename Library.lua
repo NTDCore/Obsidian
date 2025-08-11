@@ -1874,6 +1874,18 @@ do
             Info.Mode = "Toggle"
         end
 
+        local SpecialKeys = {
+            ["MB1"] = Enum.UserInputType.MouseButton1,
+            ["MB2"] = Enum.UserInputType.MouseButton2,
+            ["MB3"] = Enum.UserInputType.MouseButton3
+        }
+
+        local SpecialKeysInput = {
+            [Enum.UserInputType.MouseButton1] = "MB1",
+            [Enum.UserInputType.MouseButton2] = "MB2",
+            [Enum.UserInputType.MouseButton3] = "MB3"
+        }
+
         local Picker = New("TextButton", {
             BackgroundColor3 = "MainColor",
             BorderColor3 = "OutlineColor",
@@ -2074,13 +2086,11 @@ do
                     return false
                 end
 
-                if Key == "MB1" or Key == "MB2" then
-                    return Key == "MB1" and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
-                        or Key == "MB2" and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2)
-                end
-
-                return UserInputService:IsKeyDown(Enum.KeyCode[KeyPicker.Value])
-                    and not UserInputService:GetFocusedTextBox()
+                if SpecialKeys[Key] ~= nil then
+                    return UserInputService:IsMouseButtonPressed(SpecialKeys[Key]) and not UserInputService:GetFocusedTextBox();
+                else
+                    return UserInputService:IsKeyDown(Enum.KeyCode[Key]) and not UserInputService:GetFocusedTextBox();
+                end;
             else
                 return KeyPicker.Toggled
             end
@@ -2133,12 +2143,11 @@ do
             local Input = UserInputService.InputBegan:Wait()
             local Key = "Unknown"
 
-            if Input.UserInputType == Enum.UserInputType.Keyboard then
+            if SpecialKeysInput[Input.UserInputType] ~= nil then
+                Key = SpecialKeysInput[Input.UserInputType];
+
+            elseif Input.UserInputType == Enum.UserInputType.Keyboard then
                 Key = Input.KeyCode == Enum.KeyCode.Escape and "None" or Input.KeyCode.Name
-            elseif Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                Key = "MB1"
-            elseif Input.UserInputType == Enum.UserInputType.MouseButton2 then
-                Key = "MB2"
             end
 
             KeyPicker.Value = Key
@@ -2172,14 +2181,10 @@ do
             if KeyPicker.Mode == "Toggle" then
                 local Key = KeyPicker.Value
 
-                if Key == "MB1" or Key == "MB2" then
-                    if
-                        Key == "MB1" and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
-                        or Key == "MB2" and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2)
-                    then
-                        KeyPicker.Toggled = not KeyPicker.Toggled
-                        KeyPicker:DoClick()
-                    end
+                if SpecialKeysInput[Input.UserInputType] == Key then
+                    KeyPicker.Toggled = not KeyPicker.Toggled
+                    KeyPicker:DoClick()
+                    
                 elseif Input.UserInputType == Enum.UserInputType.Keyboard and Input.KeyCode.Name == Key then
                     KeyPicker.Toggled = not KeyPicker.Toggled
                     KeyPicker:DoClick()
@@ -5622,11 +5627,13 @@ function Library:CreateWindow(WindowInfo)
         local TabContainer
         local TabLeft
         local TabRight
-
+		
         local WarningBox
+        local WarningBoxScrollingFrame
         local WarningTitle
         local WarningText
         local WarningStroke
+        local WarningBoxLockSize = false
 
         Icon = Library:GetIcon(Icon)
         do
@@ -5734,6 +5741,7 @@ function Library:CreateWindow(WindowInfo)
                 Library:UpdateDPI(TabRight, { Size = TabRight.Size })
             end
 
+            --// Warning Box \\--
             WarningBox = New("Frame", {
                 AutomaticSize = Enum.AutomaticSize.Y,
                 BackgroundColor3 = Color3.fromRGB(127, 0, 0),
@@ -5745,12 +5753,24 @@ function Library:CreateWindow(WindowInfo)
                 Visible = false,
                 Parent = TabContainer,
             })
+
+            WarningBoxScrollingFrame = New("ScrollingFrame", {
+                BackgroundTransparency = 1,
+                BorderSizePixel = 0,
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                Position = UDim2.new(0.5, 0, 0.5, -3),
+                Size = UDim2.new(1, 0, 1, -3),
+                CanvasSize = UDim2.new(0, 0, 0, 0),
+                AutomaticCanvasSize = Enum.AutomaticSize.Y,
+                ScrollBarThickness = 3,
+                Parent = WarningBox,
+            })
             New("UIPadding", {
                 PaddingBottom = UDim.new(0, 4),
                 PaddingLeft = UDim.new(0, 6),
                 PaddingRight = UDim.new(0, 6),
                 PaddingTop = UDim.new(0, 4),
-                Parent = WarningBox,
+                Parent = WarningBoxScrollingFrame,
             })
 
             WarningTitle = New("TextLabel", {
@@ -5760,7 +5780,7 @@ function Library:CreateWindow(WindowInfo)
                 TextColor3 = Color3.fromRGB(255, 50, 50),
                 TextSize = 14,
                 TextXAlignment = Enum.TextXAlignment.Left,
-                Parent = WarningBox,
+                Parent = WarningBoxScrollingFrame,
             })
             WarningStroke = New("UIStroke", {
                 ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
@@ -5772,12 +5792,13 @@ function Library:CreateWindow(WindowInfo)
             WarningText = New("TextLabel", {
                 BackgroundTransparency = 1,
                 Position = UDim2.fromOffset(0, 16),
-                Size = UDim2.fromScale(1, 0),
+                Size = UDim2.new(1, 0, 1, -14),
                 Text = "",
                 TextSize = 14,
-                TextXAlignment = Enum.TextXAlignment.Left,
                 TextWrapped = true,
-                Parent = WarningBox,
+                Parent = WarningBoxScrollingFrame,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                TextYAlignment = Enum.TextYAlignment.Top,
             })
             New("UIStroke", {
                 ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
@@ -5799,9 +5820,14 @@ function Library:CreateWindow(WindowInfo)
         }
 
         function Tab:UpdateWarningBox(Info)
+            if typeof(Info.LockSize) == "boolean" then
+                WarningBoxLockSize = Info.LockSize
+                Tab:Resize(true)
+            end
+
             if typeof(Info.Visible) == "boolean" then
                 WarningBox.Visible = Info.Visible
-                Tab:Resize()
+                Tab:Resize(true)
             end
 
             if typeof(Info.Title) == "string" then
@@ -5819,7 +5845,7 @@ function Library:CreateWindow(WindowInfo)
                 WarningText.Size = UDim2.new(1, 0, 0, Y)
                 WarningText.Text = Info.Text
                 Library:UpdateDPI(WarningText, { Size = WarningText.Size })
-                Tab:Resize()
+                Tab:Resize(true)
             end
 
             WarningBox.BackgroundColor3 = Info.IsNormal == true and Library.Scheme.BackgroundColor
@@ -5858,15 +5884,18 @@ function Library:CreateWindow(WindowInfo)
 
         function Tab:Resize(ResizeWarningBox: boolean?)
             if ResizeWarningBox then
+                local MaximumSize = math.floor(TabContainer.AbsoluteSize.Y / 3.25);
                 local _, Y = Library:GetTextBounds(
                     WarningText.Text,
                     Library.Scheme.Font,
                     WarningText.TextSize,
                     WarningText.AbsoluteSize.X
                 )
+				
+                if WarningBoxLockSize == true and Y >= MaximumSize then Y = MaximumSize; end
 
-                WarningText.Size = UDim2.new(1, 0, 0, Y)
-                Library:UpdateDPI(WarningText, { Size = WarningText.Size })
+                WarningBox.Size = UDim2.new(1, 0, 0, Y)
+                Library:UpdateDPI(WarningText, { Size = WarningBox.Size })
             end
 
             local Offset = WarningBox.Visible and WarningBox.AbsoluteSize.Y + 6 or 0
