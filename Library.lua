@@ -1026,9 +1026,6 @@ local function FillInstance(Table: { [string]: any }, Instance: GuiObject)
             end
         end
 
-        if setthreadidentity then
-            setthreadidentity(8)
-        end
         Instance[k] = v
     end
 
