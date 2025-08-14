@@ -1839,6 +1839,7 @@ function Library:Unload()
     Library.Unloaded = true
     ScreenGui:Destroy()
     ModalScreenGui:Destroy()
+    table.clear(Library)
     getgenv().Library = nil
 end
 
@@ -6590,5 +6591,5 @@ Library:GiveSignal(Players.PlayerRemoving:Connect(OnPlayerChange))
 Library:GiveSignal(Teams.ChildAdded:Connect(OnTeamChange))
 Library:GiveSignal(Teams.ChildRemoved:Connect(OnTeamChange))
 
-getgenv().Library = Library
+if shared.skip_getgenv ~= true then getgenv().Library = Library
 return Library
