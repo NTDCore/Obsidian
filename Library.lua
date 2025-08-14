@@ -1026,6 +1026,9 @@ local function FillInstance(Table: { [string]: any }, Instance: GuiObject)
             end
         end
 
+        if setthreadidentity then
+            setthreadidentity(8)
+        end
         Instance[k] = v
     end
 
@@ -1836,7 +1839,6 @@ function Library:Unload()
     Library.Unloaded = true
     ScreenGui:Destroy()
     ModalScreenGui:Destroy()
-    table.clear(Library)
     getgenv().Library = nil
 end
 
@@ -3294,9 +3296,6 @@ do
 
         addMaid(Toggle)
 
-        if setthreadidentity then
-            setthreadidentity(8)
-        end
         local Button = New("TextButton", {
             Active = not Toggle.Disabled,
             BackgroundTransparency = 1,
@@ -6591,5 +6590,5 @@ Library:GiveSignal(Players.PlayerRemoving:Connect(OnPlayerChange))
 Library:GiveSignal(Teams.ChildAdded:Connect(OnTeamChange))
 Library:GiveSignal(Teams.ChildRemoved:Connect(OnTeamChange))
 
-if shared.skip_getgenv ~= true then getgenv().Library = Library end
+getgenv().Library = Library
 return Library
