@@ -3297,6 +3297,9 @@ do
 
         addMaid(Toggle)
 
+        if setthreadidentity then
+            setthreadidentity(8)
+        end
         local Button = New("TextButton", {
             Active = not Toggle.Disabled,
             BackgroundTransparency = 1,
