@@ -6591,5 +6591,5 @@ Library:GiveSignal(Players.PlayerRemoving:Connect(OnPlayerChange))
 Library:GiveSignal(Teams.ChildAdded:Connect(OnTeamChange))
 Library:GiveSignal(Teams.ChildRemoved:Connect(OnTeamChange))
 
-if shared.skip_getgenv ~= true then getgenv().Library = Library
+if shared.skip_getgenv ~= true then getgenv().Library = Library end
 return Library
