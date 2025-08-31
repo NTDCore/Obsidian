@@ -2236,6 +2236,7 @@ do
         local ColorPicker = {
             Value = Info.Default,
             Transparency = Info.Transparency or 0,
+            Title = Info.Title,
 
             Callback = Info.Callback,
             Changed = Info.Changed,
@@ -2282,11 +2283,11 @@ do
             Parent = ColorMenu.Menu,
         })
 
-        if typeof(Info.Title) == "string" then
+        if typeof(ColorPicker.Title) == "string" then
             New("TextLabel", {
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 0, 8),
-                Text = Info.Title,
+                Text = ColorPicker.Title,
                 TextSize = 14,
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Parent = ColorMenu.Menu,
@@ -2651,6 +2652,7 @@ do
 
     function Funcs:AddLabel(...)
         local Data = {}
+        local Addons = {}
 
         local First = select(1, ...)
         local Second = select(2, ...)
@@ -2677,6 +2679,8 @@ do
         local Label = {
             Text = Data.Text,
             DoesWrap = Data.DoesWrap,
+
+            Addons = Addons,
 
             Visible = Data.Visible,
             Type = "Label",
@@ -3670,6 +3674,8 @@ do
 
             Prefix = Info.Prefix,
             Suffix = Info.Suffix,
+            Compact = Info.Compact,
+            Rounding = Info.Rounding,
 
             Tooltip = Info.Tooltip,
             DisabledTooltip = Info.DisabledTooltip,
@@ -3869,7 +3875,7 @@ do
                 local Scale = math.clamp((Location - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X, 0, 1)
 
                 local OldValue = Slider.Value
-                Slider.Value = Round(Slider.Min + ((Slider.Max - Slider.Min) * Scale), Info.Rounding)
+                Slider.Value = Round(Slider.Min + ((Slider.Max - Slider.Min) * Scale), Slider.Rounding)
 
                 Slider:Display()
                 if Slider.Value ~= OldValue then
@@ -3920,6 +3926,7 @@ do
             Value = Info.Multi and {} or nil,
             Values = Info.Values,
             DisabledValues = Info.DisabledValues,
+            Multi = Info.Multi,
 
             SpecialType = Info.SpecialType,
             ExcludeLocalPlayer = Info.ExcludeLocalPlayer,
@@ -5636,7 +5643,6 @@ function Library:CreateWindow(WindowInfo)
         local WarningTitle
         local WarningText
         local WarningStroke
-        local WarningBoxLockSize = false
 
         Icon = Library:GetIcon(Icon)
         do
@@ -5819,34 +5825,31 @@ function Library:CreateWindow(WindowInfo)
                 TabLeft,
                 TabRight,
             },
+            WarningBox = {
+                IsNormal = false,
+                LockSize = false,
+                Visible = false,
+                Title = "WARNING",
+                Text = ""
+            }
         }
 
         function Tab:UpdateWarningBox(Info)
-            if typeof(Info.LockSize) == "boolean" then
-                WarningBoxLockSize = Info.LockSize
-                Tab:Resize(true)
-            end
+            if typeof(Info.IsNormal) == "boolean"   then Tab.WarningBox.IsNormal    = Info.IsNormal end
+            if typeof(Info.LockSize) == "boolean"   then Tab.WarningBox.LockSize    = Info.LockSize end
+            if typeof(Info.Visible) == "boolean"    then Tab.WarningBox.Visible     = Info.Visible end
+            if typeof(Info.Title) == "string"       then Tab.WarningBox.Title       = Info.Title end
+            if typeof(Info.Text) == "string"        then Tab.WarningBox.Text        = Info.Text end
 
-            if typeof(Info.Visible) == "boolean" then
-                WarningBox.Visible = Info.Visible
-                Tab:Resize(true)
-            end
+            WarningBox.Visible = Tab.WarningBox.Visible
+            WarningTitle.Text = Tab.WarningBox.Title
+            WarningText.Text = Tab.WarningBox.Text
+            Tab:Resize(true)
 
-            if typeof(Info.Title) == "string" then
-                WarningTitle.Text = Info.Title
-            end
-
-            if typeof(Info.Text) == "string" then
-                WarningText.Text = Info.Text
-                Tab:Resize(true)
-            end
-
-            WarningBox.BackgroundColor3 = Info.IsNormal == true and Library.Scheme.BackgroundColor
-                or Color3.fromRGB(127, 0, 0)
-            WarningBox.BorderColor3 = Info.IsNormal == true and Library.Scheme.OutlineColor
-                or Color3.fromRGB(255, 50, 50)
-            WarningTitle.TextColor3 = Info.IsNormal == true and Library.Scheme.FontColor or Color3.fromRGB(255, 50, 50)
-            WarningStroke.Color = Info.IsNormal == true and Library.Scheme.OutlineColor or Color3.fromRGB(169, 0, 0)
+            WarningBox.BackgroundColor3 = Tab.WarningBox.IsNormal == true and Library.Scheme.BackgroundColor or Color3.fromRGB(127, 0, 0)
+            WarningBox.BorderColor3 = Tab.WarningBox.IsNormal == true and Library.Scheme.OutlineColor or Color3.fromRGB(255, 50, 50)
+            WarningTitle.TextColor3 = Tab.WarningBox.IsNormal == true and Library.Scheme.FontColor or Color3.fromRGB(255, 50, 50)
+            WarningStroke.Color = Tab.WarningBox.IsNormal == true and Library.Scheme.OutlineColor or Color3.fromRGB(169, 0, 0)
 
             if not Library.Registry[WarningBox] then
                 Library:AddToRegistry(WarningBox, {})
@@ -5859,19 +5862,19 @@ function Library:CreateWindow(WindowInfo)
             end
 
             Library.Registry[WarningBox].BackgroundColor3 = function()
-                return Info.IsNormal == true and Library.Scheme.BackgroundColor or Color3.fromRGB(127, 0, 0)
+                return Tab.WarningBox.IsNormal == true and Library.Scheme.BackgroundColor or Color3.fromRGB(127, 0, 0)
             end
 
             Library.Registry[WarningBox].BorderColor3 = function()
-                return Info.IsNormal == true and Library.Scheme.OutlineColor or Color3.fromRGB(255, 50, 50)
+                return Tab.WarningBox.IsNormal == true and Library.Scheme.OutlineColor or Color3.fromRGB(255, 50, 50)
             end
 
             Library.Registry[WarningTitle].TextColor3 = function()
-                return Info.IsNormal == true and Library.Scheme.FontColor or Color3.fromRGB(255, 50, 50)
+                return Tab.WarningBox.IsNormal == true and Library.Scheme.FontColor or Color3.fromRGB(255, 50, 50)
             end
 
             Library.Registry[WarningStroke].Color = function()
-                return Info.IsNormal == true and Library.Scheme.OutlineColor or Color3.fromRGB(169, 0, 0)
+                return Tab.WarningBox.IsNormal == true and Library.Scheme.OutlineColor or Color3.fromRGB(169, 0, 0)
             end
         end
 
@@ -5886,7 +5889,7 @@ function Library:CreateWindow(WindowInfo)
                 )
 
                 local YBox = 24 + YText
-                if WarningBoxLockSize == true and YBox >= MaximumSize then
+                if Tab.WarningBox.LockSize == true and YBox >= MaximumSize then
                     WarningBoxScrollingFrame.CanvasSize = UDim2.fromOffset(0, YBox)
                     YBox = MaximumSize
                 else
