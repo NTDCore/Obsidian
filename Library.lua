@@ -145,7 +145,7 @@ do
             return AssetData.Id
         end
 
-        local AssetID = `rbxassetid://{AssetData.RobloxId}`
+        local AssetID = string.format("rbxassetid://%s", AssetData.RobloxId)
 
         if getcustomasset then
             local Success, NewID = pcall(getcustomasset, AssetData.Path)
@@ -171,7 +171,7 @@ do
         end
 
         local URLPath = AssetPath:gsub("Obsidian/", "")
-        writefile(AssetPath, game:HttpGet(`{BaseURL}{URLPath}`))
+        writefile(AssetPath, game:HttpGet(BaseURL .. URLPath))
     end
 
     for _, Data in ObsidianImageManager.Assets do
@@ -5253,7 +5253,7 @@ function Library:Notify(...)
     if Data.SoundId then
         local SoundId = Data.SoundId
         if typeof(SoundId) == "number" then
-            SoundId = `rbxassetid://{SoundId}`
+            SoundId = string.format("rbxassetid://%d", SoundId)
         end
 
         New("Sound", {
@@ -5424,8 +5424,8 @@ function Library:CreateWindow(WindowInfo)
         })
 
         if WindowInfo.Icon then
-            WindowIcon = New("ImageLabel", {
-                Image = if tonumber(WindowInfo.Icon) then `rbxassetid://{WindowInfo.Icon}` else WindowInfo.Icon,
+            New("ImageLabel", {
+                Image = if tonumber(WindowInfo.Icon) then string.format("rbxassetid://%s", WindowInfo.Icon) else WindowInfo.Icon,
                 Size = WindowInfo.IconSize,
                 Parent = TitleHolder,
             })
