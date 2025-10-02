@@ -963,22 +963,8 @@ local function addMaid(t)
 end
 
 function Library:GiveSignal(Connection: RBXScriptConnection)
-    if typeof(c) == 'Instance' then
-		table.insert(self.Signals, {
-			Disconnect = function()
-				c:ClearAllChildren()
-				c:Destroy()
-			end
-		})
-	elseif type(c) == 'function' then
-		table.insert(self.Signals, {
-			Disconnect = c
-		})
-	else
-		table.insert(self.Signals, c)
-	end
-
-	return c
+    table.insert(Library.Signals, Connection)
+    return Connection
 end
 
 function IsValidCustomIcon(Icon: string)
