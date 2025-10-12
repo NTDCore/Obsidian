@@ -6229,7 +6229,7 @@ function Library:CreateWindow(WindowInfo)
     end
 
     function Window:SetWindowTitle(Title)
-        WindowTitle.Text = tostring(Title)
+        LayoutRefs.WindowTitle.Text = tostring(Title)
     end
 
     function Window:AddTab(...)
