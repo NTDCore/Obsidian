@@ -967,12 +967,40 @@ function Library:SetDPIScale(DPIScale: number)
     end
 end
 
+local function addMaid(t)
+	t.Signals = {}
+
+	function t:GiveSignal(c: RBXScriptConnection)
+		if typeof(c) == 'Instance' then
+			table.insert(self.Signals, {
+				Disconnect = function()
+					c:ClearAllChildren()
+					c:Destroy()
+				end
+			})
+		elseif type(c) == 'function' then
+			table.insert(self.Signals, {
+				Disconnect = c
+			})
+		elseif type(c) == 'thread' then
+			table.insert(self.Signals, {
+				Disconnect = function()
+					task.cancel(c)
+				end
+			})
+		else
+			table.insert(self.Signals, c)
+		end
+
+		return c
+	end
+end
+
 function Library:GiveSignal(Connection: RBXScriptConnection | RBXScriptSignal)
     local ConnectionType = typeof(Connection)
     if Connection and (ConnectionType == "RBXScriptConnection" or ConnectionType == "RBXScriptSignal") then
         table.insert(Library.Signals, Connection)
     end
-
     return Connection
 end
 
@@ -1062,7 +1090,11 @@ local function FillInstance(Table: { [string]: any }, Instance: GuiObject)
             end
         end
 
+        if setthreadidentity then
+            setthreadidentity(8)
+        end
         Instance[key] = value
+
     end
 
     if GetTableSize(ThemeProperties) > 0 then
@@ -1955,6 +1987,12 @@ function Library:Unload()
 
     for _, Callback in Library.UnloadSignals do
         Library:SafeCallback(Callback)
+    end
+
+    for _, v in Toggles do
+        if v.Value then
+            v:SetValue(not v.Value)
+        end
     end
 
     for _, Tooltip in Tooltips do
@@ -3557,6 +3595,7 @@ do
 
             Callback = Info.Callback,
             Changed = Info.Changed,
+            Signals = {},
 
             Risky = Info.Risky,
             Disabled = Info.Disabled,
@@ -3565,6 +3604,8 @@ do
 
             Type = "Toggle",
         }
+
+        addMaid(Toggle)
 
         local Button = New("TextButton", {
             Active = not Toggle.Disabled,
@@ -3671,7 +3712,15 @@ do
                 end
             end
 
+            if not self.Value then
+                for _, v in self.Signals do
+                    v:Disconnect()
+                end
+                table.clear(self.Signals)
+            end
+
             Library:UpdateDependencyBoxes()
+
             Library:SafeCallback(Toggle.Callback, Toggle.Value)
             Library:SafeCallback(Toggle.Changed, Toggle.Value)
         end
@@ -3760,6 +3809,7 @@ do
 
             Callback = Info.Callback,
             Changed = Info.Changed,
+            Signals = {},
 
             Risky = Info.Risky,
             Disabled = Info.Disabled,
@@ -3768,6 +3818,8 @@ do
 
             Type = "Toggle",
         }
+
+        addMaid(Toggle)
 
         local Button = New("TextButton", {
             Active = not Toggle.Disabled,
@@ -3893,7 +3945,15 @@ do
                 end
             end
 
+            if not self.Value then
+                for _, v in self.Signals do
+                    v:Disconnect()
+                end
+                table.clear(self.Signals)
+            end
+
             Library:UpdateDependencyBoxes()
+
             Library:SafeCallback(Toggle.Callback, Toggle.Value)
             Library:SafeCallback(Toggle.Changed, Toggle.Value)
         end
@@ -6482,6 +6542,10 @@ function Library:CreateWindow(WindowInfo)
         if IsDefaultSearchbarSize then
             SearchBox.Size = UDim2.fromScale(1, 1)
         end
+    end
+
+    function Window:SetWindowTitle(Title)
+        LayoutRefs.WindowTitle.Text = tostring(Title)
     end
 
     function Window:AddTab(...)
