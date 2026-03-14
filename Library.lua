@@ -3061,7 +3061,7 @@ do
         ColorPicker:Display()
 
         if ParentObj.Addons then
-            table.insert(ParentObj.Addons, ColorPicker)
+            ParentObj[Idx] = ColorPicker
         end
 
         ColorPicker.Value = ColorPicker.Default
