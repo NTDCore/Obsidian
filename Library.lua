@@ -3064,7 +3064,7 @@ do
             table.insert(ParentObj.Addons, ColorPicker)
         end
 
-        ColorPicker.Default = ColorPicker.Value
+        ColorPicker.Value = ColorPicker.Default
 
         Options[Idx] = ColorPicker
 
