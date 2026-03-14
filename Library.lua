@@ -3061,7 +3061,7 @@ do
         ColorPicker:Display()
 
         if ParentObj.Addons then
-            ParentObj[Idx] = ColorPicker
+            ParentObj.Addons[Idx] = ColorPicker
         end
 
         ColorPicker.Value = ColorPicker.Default
