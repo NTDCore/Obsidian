@@ -1,3 +1,29 @@
+## 24.03.2026
+
+```diff
+[features]
++ Input.VerifyValue(NewValue: string): boolean
++ Input.ClearTextOnBlur
++ KeyPicker.Blacklisted, KeyPicker.BlacklistedModifiers
++ KeyPicker.Whitelisted, KeyPicker.WhitelistedModifiers
+
+[changes]
++ CornerRadius now applies to more elements
++ Height of the slider increased by 1px
+```
+
+## 17.03.2026
+
+```diff
+[features]
++ Window:SetCornerRadius(Radius: number)
+
+[fixes]
++ Fixed Window:SetFooter not changing the label text
++ Fixed footer background not properly resizing
++ Fixed Tab buttons not respecting corner radius
+```
+
 ## 16.01.2026
 
 ```diff
