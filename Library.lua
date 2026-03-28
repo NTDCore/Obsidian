@@ -2788,6 +2788,8 @@ do
 
             Type = "ColorPicker",
         }
+
+        ColorPicker.Value = Info.Default
         ColorPicker.Hue, ColorPicker.Sat, ColorPicker.Vib = ColorPicker.Value:ToHSV()
 
         local Holder = New("TextButton", {
@@ -3207,8 +3209,6 @@ do
         if ParentObj.Addons then
             ParentObj.Addons[Idx] = ColorPicker
         end
-
-        ColorPicker.Value = ColorPicker.Default
 
         Options[Idx] = ColorPicker
 
