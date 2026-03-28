@@ -79,7 +79,6 @@ local SaveManager = {} do
         },
         ColorPicker = {
             Save = function(idx, object)
-                table.foreach(object, warn)
                 return { type = "ColorPicker", idx = idx, value = object.Value:ToHex(), transparency = object.Transparency }
             end,
             Load = function(idx, data)
