@@ -3738,6 +3738,7 @@ do
         local Container = Groupbox.Container
 
         local Toggle = {
+            Index = Idx,
             Text = Info.Text,
             Value = Info.Default,
 
@@ -3955,6 +3956,7 @@ do
         local Container = Groupbox.Container
 
         local Toggle = {
+            Index = Idx,
             Text = Info.Text,
             Value = Info.Default,
 
