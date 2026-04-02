@@ -980,32 +980,32 @@ function Library:SetDPIScale(DPIScale: number)
 end
 
 local function addMaid(t)
-	t.Signals = {}
+    t.Signals = {}
 
-	function t:GiveSignal(c: RBXScriptConnection)
-		if typeof(c) == 'Instance' then
-			table.insert(self.Signals, {
-				Disconnect = function()
-					c:ClearAllChildren()
-					c:Destroy()
-				end
-			})
-		elseif type(c) == 'function' then
-			table.insert(self.Signals, {
-				Disconnect = c
-			})
-		elseif type(c) == 'thread' then
-			table.insert(self.Signals, {
-				Disconnect = function()
-					task.cancel(c)
-				end
-			})
-		else
-			table.insert(self.Signals, c)
-		end
+    function t:GiveSignal(c: RBXScriptConnection)
+        if typeof(c) == 'Instance' then
+            table.insert(self.Signals, {
+                Disconnect = function()
+                    c:ClearAllChildren()
+                    c:Destroy()
+                end
+            })
+        elseif type(c) == 'function' then
+            table.insert(self.Signals, {
+                Disconnect = c
+            })
+        elseif type(c) == 'thread' then
+            table.insert(self.Signals, {
+                Disconnect = function()
+                    task.cancel(c)
+                end
+            })
+        else
+            table.insert(self.Signals, c)
+        end
 
-		return c
-	end
+        return c
+    end
 end
 
 function Library:GiveSignal(Connection: RBXScriptConnection | RBXScriptSignal)
