@@ -3881,9 +3881,7 @@ do
             Library:SafeCallback(Toggle.Changed, Toggle.Value)
         end
 
-        function Toggle:Toggle()
-            Toggle:SetValue()
-        end
+        Toggle.Toggle = Toggle.SetValue
 
         function Toggle:SetDisabled(Disabled: boolean)
             Toggle.Disabled = Disabled
@@ -4096,7 +4094,7 @@ do
                 return
             end
 
-            Toggle.Value = Value
+            Toggle.Value = Value or not Toggle.Value
             Toggle:Display()
 
             for _, Addon in Toggle.Addons do
@@ -4118,6 +4116,8 @@ do
             Library:SafeCallback(Toggle.Callback, Toggle.Value)
             Library:SafeCallback(Toggle.Changed, Toggle.Value)
         end
+
+        Toggle.Toggle = Toggle.SetValue
 
         function Toggle:SetDisabled(Disabled: boolean)
             Toggle.Disabled = Disabled
