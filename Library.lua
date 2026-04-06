@@ -1010,13 +1010,14 @@ end
 
 addMaid(Library)
 
+--[[
 function Library:GiveSignal(Connection: RBXScriptConnection | RBXScriptSignal)
     local ConnectionType = typeof(Connection)
     if Connection and (ConnectionType == "RBXScriptConnection" or ConnectionType == "RBXScriptSignal") then
         table.insert(Library.Signals, Connection)
     end
     return Connection
-end
+end]]
 
 function IsValidCustomIcon(Icon: string)
     return typeof(Icon) == "string"
