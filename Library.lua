@@ -986,13 +986,13 @@ local function addMaid(tab)
         if typeof(callback) == 'Instance' then
             table.insert(self.Signals, {
                 Disconnect = function()
-                    c:ClearAllChildren()
-                    c:Destroy()
+                    callback:ClearAllChildren()
+                    callback:Destroy()
                 end
             })
         elseif type(callback) == 'function' then
             table.insert(self.Signals, {
-                Disconnect = c
+                Disconnect = callback
             })
         elseif type(callback) == 'thread' then
             table.insert(self.Signals, {
@@ -1004,7 +1004,7 @@ local function addMaid(tab)
             table.insert(self.Signals, callback)
         end
 
-        return c
+        return callback
     end
 end
 
