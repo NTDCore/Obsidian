@@ -7316,7 +7316,7 @@ function Library:CreateWindow(WindowInfo)
                 local BoxIcon = Library:GetCustomIcon(Info.IconName)
                 print(BoxIcon)
                 if BoxIcon then
-                    warn(BoxIcon)
+                    table.foreach(BoxIcon, warn)
                     New("ImageLabel", {
                         Image = BoxIcon.Url,
                         ImageColor3 = BoxIcon.Custom and "WhiteColor" or "AccentColor",
