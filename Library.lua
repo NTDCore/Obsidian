@@ -342,8 +342,7 @@ local Templates = {
         FooterButtons = {}
     },
     Loading = {
-        Title = "mspaint",
-        Icon = 95816097006870,
+        Title = "No Title",
         IconSize = UDim2.fromOffset(30, 30),
 
         LoadingIcon = CustomImageManager.GetAsset("LoadingIcon"),
