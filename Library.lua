@@ -1326,7 +1326,7 @@ function Library:ChangeCursorIcon(ImageId: string)
     end
 
     local Icon = Library:GetCustomIcon(ImageId)
-    assert(Icon.Url, "Image must be a valid Roblox asset or a valid URL or a valid lucide icon.")
+    assert(Icon, "Image must be a valid Roblox asset or a valid URL or a valid lucide icon.")
 
     CursorCustomImage.Visible = true
     CursorCustomImage.Image = Icon.Url
@@ -5537,7 +5537,7 @@ do
         }
 
         local Icon = Library:GetCustomIcon(ImageProperties.Image)
-        assert(Icon.Url, "Image must be a valid Roblox asset or a valid URL or a valid lucide icon.")
+        assert(Icon, "Image must be a valid Roblox asset or a valid URL or a valid lucide icon.")
 
         ImageProperties.Image = Icon.Url
         ImageProperties.ImageRectOffset = Icon.ImageRectOffset
@@ -5557,7 +5557,7 @@ do
             assert(typeof(NewImage) == "string", "Image must be a string.")
 
             local Icon = Library:GetCustomIcon(NewImage)
-            assert(Icon.Url, "Image must be a valid Roblox asset or a valid URL or a valid lucide icon.")
+            assert(Icon, "Image must be a valid Roblox asset or a valid URL or a valid lucide icon.")
 
             NewImage = Icon.Url
             Image.RectOffset = Icon.ImageRectOffset
@@ -6139,7 +6139,7 @@ function Library:Notify(...)
     local BigIconLabel
     if Data.BigIcon then
         local ParsedIcon = Library:GetCustomIcon(Data.BigIcon)
-        if ParsedIcon.Url then
+        if ParsedIcon then
             BigIconLabel = New("ImageLabel", {
                 BackgroundTransparency = 1,
                 Size = UDim2.fromOffset(24, 24),
@@ -6175,7 +6175,7 @@ function Library:Notify(...)
     local IconLabel
     if Data.Icon and TitleContainer then
         local ParsedIcon = Library:GetCustomIcon(Data.Icon)
-        if ParsedIcon.Url then
+        if ParsedIcon then
             IconLabel = New("ImageLabel", {
                 BackgroundTransparency = 1,
                 AnchorPoint = Vector2.new(0, 0.5),
@@ -6968,7 +6968,7 @@ function Library:CreateWindow(WindowInfo)
                 Parent = TabButton,
             })
 
-            if Icon.Url then
+            if Icon then
                 TabIcon = New("ImageLabel", {
                     Image = Icon.Url,
                     ImageColor3 = Icon.Custom and "WhiteColor" or "AccentColor",
@@ -7319,7 +7319,7 @@ function Library:CreateWindow(WindowInfo)
                 })
 
                 local BoxIcon = Library:GetCustomIcon(Info.IconName)
-                if BoxIcon.Url then
+                if BoxIcon then
                     New("ImageLabel", {
                         Image = BoxIcon.Url,
                         ImageColor3 = BoxIcon.Custom and "WhiteColor" or "AccentColor",
@@ -7333,7 +7333,7 @@ function Library:CreateWindow(WindowInfo)
 
                 GroupboxLabel = New("TextLabel", {
                     BackgroundTransparency = 1,
-                    Position = UDim2.fromOffset(BoxIcon.Url and 24 or 0, 0),
+                    Position = UDim2.fromOffset(BoxIcon and 24 or 0, 0),
                     Size = UDim2.new(1, 0, 0, 34),
                     Text = Info.Name,
                     TextSize = 15,
@@ -7529,7 +7529,7 @@ function Library:CreateWindow(WindowInfo)
                 })
 
                 local ButtonIcon
-                if BoxIcon.Url then
+                if BoxIcon then
                     ButtonIcon = New("ImageLabel", {
                         Image = BoxIcon.Url,
                         ImageColor3 = BoxIcon.Custom and "WhiteColor" or "AccentColor",
@@ -7824,7 +7824,7 @@ function Library:CreateWindow(WindowInfo)
                 Parent = TabButton,
             })
 
-            if typeof(Icon) == 'table' and Icon.Value or Icon then
+            if Icon then
                 TabIcon = New("ImageLabel", {
                     Image = Icon.Url,
                     ImageColor3 = Icon.Custom and "WhiteColor" or "AccentColor",
@@ -8145,7 +8145,7 @@ function Library:CreateWindow(WindowInfo)
 
         if Info.Icon then
             local ParsedIcon = Library:GetCustomIcon(Info.Icon)
-            if ParsedIcon.Url then
+            if ParsedIcon then
                 local IconImg = New("ImageLabel", {
                     BackgroundTransparency = 1,
                     Size = UDim2.fromOffset(16, 16),
