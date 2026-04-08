@@ -353,6 +353,7 @@ local Templates = {
         TotalSteps = 10,
 
         ShowSidebar = false,
+        AutoResizeHeight = false,
 
         WindowWidth = 450,
         WindowHeight = 275,
@@ -1108,12 +1109,16 @@ function Library:GetCustomIcon(IconName: string): any
         return LucideIcon
     end
 
-    return {
-        Url = if tonumber(IconName) then string.format("rbxassetid://%s", tostring(IconName)) else IconName,
-        ImageRectOffset = Vector2.zero,
-        ImageRectSize = Vector2.zero,
-        Custom = true,
-    }
+    if tonumber(IconName) then
+        return {
+            Url = string.format("rbxassetid://%s", tostring(IconName)),
+            ImageRectOffset = Vector2.zero,
+            ImageRectSize = Vector2.zero,
+            Custom = true,
+        }
+    end
+    
+    return nil
 end
 
 function Library:Validate(Table: { [string]: any }, Template: { [string]: any }): { [string]: any }
@@ -8709,11 +8714,13 @@ function Library:CreateLoading(LoadingInfo)
         TotalSteps = LoadingInfo.TotalSteps,
 
         ShowSidebar = LoadingInfo.ShowSidebar,
+        AutoResizeHeight = LoadingInfo.AutoResizeHeight,
         IsError = false,
         Destroyed = false,
 
         WindowWidth = LoadingInfo.WindowWidth,
         WindowHeight = LoadingInfo.WindowHeight,
+        BaseWindowHeight = LoadingInfo.WindowHeight,
         WindowErrorHeight = LoadingInfo.WindowHeight,
 
         ContentWidth = LoadingInfo.ContentWidth,
@@ -8901,20 +8908,22 @@ function Library:CreateLoading(LoadingInfo)
 
     local MessageLabel = New("TextLabel", {
         BackgroundTransparency = 1,
-        AutomaticSize = Enum.AutomaticSize.XY,
-        Size = UDim2.fromOffset(0, 0),
+        AutomaticSize = Loading.AutoResizeHeight and Enum.AutomaticSize.Y or Enum.AutomaticSize.XY,
+        Size = Loading.AutoResizeHeight and UDim2.new(1, -60, 0, 0) or UDim2.fromOffset(0, 0),
         Text = "",
         TextSize = 18,
+        TextWrapped = Loading.AutoResizeHeight,
         Parent = InnerContent,
     })
 
     local DescriptionLabel = New("TextLabel", {
         BackgroundTransparency = 1,
-        AutomaticSize = Enum.AutomaticSize.XY,
-        Size = UDim2.fromOffset(0, 0),
+        AutomaticSize = Loading.AutoResizeHeight and Enum.AutomaticSize.Y or Enum.AutomaticSize.XY,
+        Size = Loading.AutoResizeHeight and UDim2.new(1, -60, 0, 0) or UDim2.fromOffset(0, 0),
         Text = "",
         TextSize = 14,
         TextTransparency = 0.5,
+        TextWrapped = Loading.AutoResizeHeight,
         Parent = InnerContent,
     })
 
@@ -9097,12 +9106,35 @@ function Library:CreateLoading(LoadingInfo)
     end
 
     --// Content Page \\--
+    function Loading:RecalculateLoadingHeight()
+        if not Loading.AutoResizeHeight then
+            return
+        end
+
+        local RequiredHeight = 
+              49 -- TopBar
+            + 48 -- Padding
+            + InnerContent.UIListLayout.AbsoluteContentSize.Y
+
+        Loading.WindowHeight = math.max(Loading.BaseWindowHeight, RequiredHeight)
+    end
+
     function Loading:SetMessage(Text)
         MessageLabel.Text = Text
+
+        if Loading.AutoResizeHeight then
+            Loading:RecalculateLoadingHeight()
+            Loading:UpdateLayout()
+        end
     end
 
     function Loading:SetDescription(Text)
         DescriptionLabel.Text = Text
+
+        if Loading.AutoResizeHeight then
+            Loading:RecalculateLoadingHeight()
+            Loading:UpdateLayout()
+        end
     end
 
     function Loading:SetLoadingIcon(Icon)
