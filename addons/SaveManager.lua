@@ -110,12 +110,12 @@ local SaveManager = {} do
         },
         DraggableLabel = {
             Save = function(idx, object)
-                return { type = "DraggableLabel", idx = idx, Position = tostring(object.Label.Position) }
+                return { type = "DraggableLabel", idx = idx, position = {X = object.Label.Position.X.Offset, Y = object.Label.Position.Y.Offset} }
             end,
             Load = function(idx, data)
                 local object = SaveManager.Library.Draggable[idx]
-                if object and object.Label.Position ~= data.Position then
-                    object.Label.Position = UDim2.new(data.Position)
+                if object and object.Label.Position ~= data.position then
+                    object.Label.Position = UDim2.fromOffset(data.position.X, data.position.Y)
                 end
             end
         }
