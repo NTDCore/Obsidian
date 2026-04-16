@@ -108,6 +108,17 @@ local SaveManager = {} do
                 end
             end,
         },
+        DraggableLabel = {
+            Save = function(idx, object)
+                return { Type = "DraggableLabel", idx = idx, Position = tostring(object.Label.Position) }
+            end,
+            Load = function(idx, data)
+                local object = SaveManager.Library.Draggable[idx]
+                if object and object.Position ~= data.Position then
+                    object.Label.Position = UDim2.new(data.Position)
+                end
+            end
+        }
     }
 
     function SaveManager:SetLibrary(library)
@@ -223,6 +234,15 @@ local SaveManager = {} do
             if self.Ignore[idx] then continue end
 
             table.insert(data.objects, self.Parser[option.Type].Save(idx, option))
+        end
+
+        for idx, label in pairs(self.Library.Draggable) do
+            if not label.Save then continue end
+            if not label.Type then continue end
+            if not self.Parser[label.Type] then continue end
+            if self.Ignore[idx] then continue end
+
+            table.insert(data.objects, self.Parser[label.Type].Save(idx, label))
         end
 
         local success, encoded = pcall(HttpService.JSONEncode, HttpService, data)

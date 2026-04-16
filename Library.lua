@@ -27,6 +27,7 @@ local Buttons = {}
 local Toggles = {}
 local Options = {}
 local Tooltips = {}
+local Draggable = {}
 
 local BaseURL = "https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/"
 local CustomImageManager = {}
@@ -199,6 +200,7 @@ local Library = {
     Buttons = Buttons,
     Toggles = Toggles,
     Options = Options,
+    Draggable = Draggable,
 
     NotifySide = "Right",
     ShowCustomCursor = true,
@@ -1021,18 +1023,18 @@ local function addMaid(tab)
     tab.Signals = {}
 
     function tab:GiveSignal(callback: RBXScriptConnection)
-        if typeof(callback) == 'Instance' then
+        if typeof(callback) == "Instance" then
             table.insert(self.Signals, {
                 Disconnect = function()
                     callback:ClearAllChildren()
                     callback:Destroy()
                 end
             })
-        elseif type(callback) == 'function' then
+        elseif type(callback) == "function" then
             table.insert(self.Signals, {
                 Disconnect = callback
             })
-        elseif type(callback) == 'thread' then
+        elseif type(callback) == "thread" then
             table.insert(self.Signals, {
                 Disconnect = function()
                     task.cancel(callback)
@@ -1593,8 +1595,11 @@ function Library:MakeOutline(Frame: GuiObject, Corner: number?, ZIndex: number?)
     return Holder, Outline
 end
 
-function Library:AddDraggableLabel(Text: string)
-    local Table = {}
+function Library:AddDraggableLabel(Text: string, Save: boolean)
+    local Table = {
+        Type = "DraggableLabel",
+        Save = Save or false
+    }
 
     local Label = New("TextLabel", {
         AutomaticSize = Enum.AutomaticSize.XY,
@@ -1639,6 +1644,9 @@ function Library:AddDraggableLabel(Text: string)
     function Table:SetVisible(Visible: boolean)
         Label.Visible = Visible
     end
+
+    table.insert(Groupbox.Elements, Table)
+    table.insert(Draggable, Table)
 
     return Table
 end
