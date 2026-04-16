@@ -114,7 +114,7 @@ local SaveManager = {} do
             end,
             Load = function(idx, data)
                 local object = SaveManager.Library.Draggable[idx]
-                if object and object.Position ~= data.Position then
+                if object and object.Label.Position ~= data.Position then
                     object.Label.Position = UDim2.new(data.Position)
                 end
             end
