@@ -110,7 +110,7 @@ local SaveManager = {} do
         },
         DraggableLabel = {
             Save = function(idx, object)
-                return { Type = "DraggableLabel", idx = idx, Position = tostring(object.Label.Position) }
+                return { type = "DraggableLabel", idx = idx, Position = tostring(object.Label.Position) }
             end,
             Load = function(idx, data)
                 local object = SaveManager.Library.Draggable[idx]
