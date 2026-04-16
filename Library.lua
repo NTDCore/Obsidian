@@ -1645,9 +1645,7 @@ function Library:AddDraggableLabel(Text: string, Save: boolean)
         Label.Visible = Visible
     end
 
-    table.insert(Groupbox.Elements, Table)
     table.insert(Draggable, Table)
-
     return Table
 end
 
