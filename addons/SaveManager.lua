@@ -275,6 +275,7 @@ local SaveManager = {} do
             if not self.Parser[option.type] then continue end
             if self.Ignore[option.idx] then continue end
 
+            task.wait() -- Synapse Z decided to crash my game so idk its gonna fix or not
             task.spawn(self.Parser[option.type].Load, option.idx, option) -- task.spawn() so the config loading wont get stuck.
         end
 
