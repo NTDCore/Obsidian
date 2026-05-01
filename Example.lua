@@ -126,7 +126,8 @@ end)
 -- This should print to the console: "My toggle state changed! New value: false"
 Toggles.MyToggle:SetValue(false)
 
-local ConnectionExample = LeftGroupBox:AddToggle("MyConnectionToggle", {
+local ConnectionExample
+ConnectionExample = LeftGroupBox:AddToggle("MyConnectionToggle", {
 	Text = "This is a toggle with signal! (open console to see player joins)",
 	Tooltip = "This is a tooltip", -- Information shown when you hover over the toggle
 	DisabledTooltip = "I am disabled!", -- Information shown when you hover over the toggle while it's disabled
@@ -187,6 +188,33 @@ local MyButton = LeftGroupBox:AddButton({
 	DoubleClick = false,
 
 	Tooltip = "This is the main button",
+	DisabledTooltip = "I am disabled!",
+
+	Disabled = false, -- Will disable the button (true / false)
+	Visible = true, -- Will make the button invisible (true / false)
+	Risky = false, -- Makes the text red (the color can be changed using Library.Scheme.Red) (Default value = false)
+})
+
+MyButton:AddButton({
+	Text = "Dialogs",
+	Func = function()
+		Window:AddDialog("EmptyDialogueIdx", {
+			Title = "Example Dialog",
+			Description = "This dialog has no elements. The padding should be completely normal and singular.",
+			AutoDismiss = true,
+			OutsideClickDismiss = true,
+			FooterButtons = {
+				Confirm = {
+					Title = "Okay",
+					Variant = "Primary",
+					Callback = function() end
+				}
+			}
+		})
+	end,
+	DoubleClick = false,
+
+	Tooltip = "This is the secondary button",
 	DisabledTooltip = "I am disabled!",
 
 	Disabled = false, -- Will disable the button (true / false)
