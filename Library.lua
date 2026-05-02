@@ -4856,7 +4856,7 @@ do
             end,
             2,
             function(Active: boolean)
-                DisplayContainer.TextTransparency = (Active and SearchBox) and 1 or 0
+                DisplayButton.TextTransparency = (Active and SearchBox) and 1 or 0
                 ArrowImage.ImageTransparency = Active and 0 or 0.5
                 ArrowImage.Rotation = Active and 180 or 0
                 if SearchBox then
@@ -4962,7 +4962,7 @@ do
             local DisabledValues = Dropdown.DisabledValues
 
             for Button, _ in Buttons do
-                Button:Destroy()
+                Button.Parent:Destroy()
             end
             table.clear(Buttons)
 
