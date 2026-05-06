@@ -575,6 +575,15 @@ local function IsDragInput(Input: InputObject, IncludeM2: boolean?)
         and Library.IsRobloxFocused
 end
 
+local function LoopClean(Table: { [any]: any })
+    for _, v in Table do
+        if type(v) == "table" then
+            LoopClean(v)
+        end
+
+        Table[_] = nil
+    end
+end
 local function GetTableSize(Table: { [any]: any })
     local Size = 0
 
@@ -1047,6 +1056,12 @@ local function addMaid(tab)
                     task.cancel(callback)
                 end
             })
+        elseif type(callback) == "table" then
+            table.insert(self.Signals, {
+                Disconnect = function()
+                    LoopClean(callback)
+                end
+            })
         else
             table.insert(self.Signals, callback)
         end
@@ -1168,7 +1183,6 @@ local function FillInstance(Table: { [string]: any }, Instance: GuiObject)
             setthreadidentity(8)
         end
         Instance[key] = value
-
     end
 
     if GetTableSize(ThemeProperties) > 0 then
@@ -1195,23 +1209,29 @@ end
 
 --// Main Instances \\-
 local function SafeParentUI(Instance: Instance, Parent: Instance | () -> Instance)
-    local success, _error = pcall(function()
-        if not Parent then
-            Parent = CoreGui
+    if setthreadidentity then
+        local success, _error = pcall(function()
+            if not Parent then
+                Parent = CoreGui
+            end
+
+            local DestinationParent
+            if typeof(Parent) == "function" then
+                DestinationParent = Parent()
+            else
+                DestinationParent = Parent
+            end
+
+            Instance.Parent = DestinationParent
+        end)
+
+        if not (success and Instance.Parent) then
+            Instance.Parent = Library.LocalPlayer:WaitForChild("PlayerGui", math.huge)
         end
-
-        local DestinationParent
-        if typeof(Parent) == "function" then
-            DestinationParent = Parent()
-        else
-            DestinationParent = Parent
+    else
+        if Instance.Parent then
+            Instance.Parent = Library.LocalPlayer:WaitForChild("PlayerGui", math.huge)
         end
-
-        Instance.Parent = DestinationParent
-    end)
-
-    if not (success and Instance.Parent) then
-        Instance.Parent = Library.LocalPlayer:WaitForChild("PlayerGui", math.huge)
     end
 end
 
