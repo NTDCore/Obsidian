@@ -4879,7 +4879,7 @@ do
             Parent = DisplayContainer,
         })
 
-        local DisplayButton = New("TextLabel", {
+        local DisplayButton = New("TextButton", {
             Active = not Dropdown.Disabled,
             BackgroundTransparency = 1,
             Size = UDim2.new(1, 0, 0, 21),
@@ -4930,7 +4930,9 @@ do
 
             local ValueImage = nil
             if Dropdown.SpecialType == "Player" and Dropdown.EnablePlayerImages == true then
-                ValueImage = { Url = string.format("rbxthumb://type=AvatarHeadShot&id=%s&w=48&h=48", tostring(Value.UserId)) }
+                if typeof(Value) == "Instance" and Value:IsA("Player") then
+                    ValueImage = { Url = string.format("rbxthumb://type=AvatarHeadShot&id=%s&w=48&h=48", tostring(Value.UserId)) }
+                end
             else
                 if Info.ValueImages and Info.ValueImages[Value] then
                     ValueImage = Library:GetCustomIcon(Info.ValueImages[Value])
@@ -5284,13 +5286,16 @@ do
             Label.Visible = not not Text
         end
 
-        DisplayContainer.MouseButton1Click:Connect(function()
+        local ToggleDropdown = function()
             if Dropdown.Disabled then
                 return
             end
 
             MenuTable:Toggle()
-        end)
+        end
+
+        DisplayContainer.MouseButton1Click:Connect(ToggleDropdown)
+        DisplayButton.MouseButton1Click:Connect(ToggleDropdown)
 
         if SearchBox then
             SearchBox:GetPropertyChangedSignal("Text"):Connect(Dropdown.BuildDropdownList)
