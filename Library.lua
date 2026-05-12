@@ -180,6 +180,7 @@ local Library = {
 
     KeybindFrame = nil,
     KeybindContainer = nil,
+    KeybindHideNone = nil,
     KeybindToggles = {},
 
     Notifications = {},
@@ -2544,6 +2545,7 @@ do
             end
 
             if KeybindsToggle.Loaded then
+                if Library.KeybindHideNone and KeyPicker.DisplayValue == 'None' then return end
                 if ShowToggle then
                     KeybindsToggle:SetNormal(false)
                 else
