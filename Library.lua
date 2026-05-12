@@ -180,7 +180,6 @@ local Library = {
 
     KeybindFrame = nil,
     KeybindContainer = nil,
-    KeybindHideNone = nil,
     KeybindToggles = {},
 
     Notifications = {},
@@ -2377,7 +2376,7 @@ do
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 0, 16),
                 Text = "",
-                Visible = (Library.KeybindHideNone and KeyPicker.Value ~= 'None') or not Info.NoUI,
+                Visible = not Info.NoUI,
                 Parent = Library.KeybindContainer,
             })
 
