@@ -2373,12 +2373,11 @@ do
 
         local KeybindsToggle = { Normal = KeyPicker.Mode ~= "Toggle" }
         do
-            if Library.KeybindHideNone and KeyPicker.DisplayValue == 'None' then return end
             local Holder = New("TextButton", {
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 0, 16),
                 Text = "",
-                Visible = not Info.NoUI,
+                Visible = (Library.KeybindHideNone and KeyPicker.Value ~= 'None') or not Info.NoUI,
                 Parent = Library.KeybindContainer,
             })
 
