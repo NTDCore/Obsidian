@@ -2373,6 +2373,7 @@ do
 
         local KeybindsToggle = { Normal = KeyPicker.Mode ~= "Toggle" }
         do
+            if Library.KeybindHideNone and KeyPicker.DisplayValue == 'None' then return end
             local Holder = New("TextButton", {
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 0, 16),
@@ -2545,7 +2546,6 @@ do
             end
 
             if KeybindsToggle.Loaded then
-                if Library.KeybindHideNone and KeyPicker.DisplayValue == 'None' then return end
                 if ShowToggle then
                     KeybindsToggle:SetNormal(false)
                 else
