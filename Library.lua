@@ -1788,10 +1788,6 @@ function Library:AddDraggableLabel(...)
     local Icon
     local Save
     local IconPosition = "left"
-    local Table = {
-        Type = "DraggableLabel",
-        Save = Save or false
-    }
 
     if typeof(Params) == "table" then
         Text = Params.Text
@@ -1802,7 +1798,7 @@ function Library:AddDraggableLabel(...)
         Text = Params
         Icon = select(2, ...)
         IconPosition = select(3, ...) or "left"
-        SAve = select(4, ...) or false
+        Save = select(4, ...) or false
     end
 
     if typeof(IconPosition) ~= "string" then
@@ -1813,7 +1809,8 @@ function Library:AddDraggableLabel(...)
     assert(IconPosition == "left" or IconPosition == "right", "Icon Position needs to be either 'left' or 'right'.")
 
     local DraggableLabel = {
-        Save = false,
+        Type = "DraggableLabel",
+        Save = Save,
         Connections = {},
         Destroyed = false
     }
