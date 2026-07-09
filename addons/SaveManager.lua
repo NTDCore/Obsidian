@@ -190,17 +190,16 @@ local ElementParser = {}; do
     )
 
     CreateParser(
-        "DraggableLabel", "Labels",
+        "DraggableLabel", "Draggable",
         function(Index: string, Input: any)
             return { position = {X = Input.Label.Position.X.Offset, Y = Input.Label.Position.Y.Offset} }
         end,
         function(Element: any?, Data: any)
             if not Element then return end
-            if Element.Value == Data.text then return end
+            if not Element.Save then return end
+            if Element.Label.Position == Data.position then return end
 
-            if Element and Element.Label.Position ~= data.position then
-                Element.Label.Position = UDim2.fromOffset(data.position.X, data.position.Y)
-            end
+            Element.Label.Position = UDim2.fromOffset(Data.position.X, Data.position.Y)
         end
     )
 
