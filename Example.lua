@@ -641,14 +641,14 @@ end)
 
 task.spawn(function()
 	while task.wait(1) do
+		if Library.Unloaded then
+			break
+		end
+
 		-- example for checking if a keybind is being pressed
 		local state = Options.KeyPicker:GetState()
 		if state then
 			print("KeyPicker is being held down")
-		end
-
-		if Library.Unloaded then
-			break
 		end
 	end
 end)
@@ -731,7 +731,7 @@ MenuGroup:AddToggle("KeybindMenuOpen", {
 })
 MenuGroup:AddToggle("ShowCustomCursor", {
 	Text = "Custom Cursor",
-	Default = true,
+	Default = Library.ShowCustomCursor,
 	Callback = function(Value)
 		Library.ShowCustomCursor = Value
 	end,

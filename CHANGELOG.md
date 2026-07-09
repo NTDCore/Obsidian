@@ -1,3 +1,85 @@
+## 09.07.2026
+
+```diff
+[changes]
++ Background Image now supports external URLs using getcustomasset
+```
+
+## 07.07.2026
+
+```diff
+[features]
++ Dropdown.DragSelect, Dropdown:SetDragSelect(Value: boolean) (only works on non-touch devices and Multi dropdowns)
++ Animations.Groupbox, Animations.KeyPicker
+
+[changes]
++ Notification appear and disappear animations are now smooth
+
+[fixes]
++ Fixed Library.ToggleKeybind
+```
+
+## 05.07.2026
+
+```diff
+[features]
++ Added Animations.ToggleWindow
++ Added Animations.TabSwitch, TabTransitionTime, TabSwipeOffset, TabSwipeFrom (left/right/top/bottom)
++ Added Animations.Dropdown
++ Window:SetAnimations(Animations, TabTransitionTime, TabSwipeOffset, TabSwipeFrom)
++ Added DisableCollapsing to AddLeftGroupbox, AddRightGroupbox
+
+[changes]
++ KeyPickers now allow setting the bind to any modifier key if it was only pressed and not held down
+
+[fixes]
++ Fixed Library.ToggleKeybind not working properly with modifier keys
++ Fixed KeyPickers firing while picking a bind for any KeyPicker
+```
+
+## 02.07.2026
+
+```diff
+[changes]
++ Save Manager and Theme Manager refactored
++ Save Manager now saves the keybind menu visibility and position
++ Save Manager and Theme Manager now show what theme is the default and what config is autoloaded inside the dropdowns
+
+[fixes]
++ Fixed dialogs buttons breaking with Destructive buttons if ThemeManager:SetDefaultTheme was used
+```
+
+## 01.07.2026
+
+```diff
+[features]
++ Confirmation dialogs to destructive actions in Save Manager and Theme Manager
++ Groupbox collapsed state now saves in configuration files
+```
+
+
+## 28.06.2026
+
+```diff
+[features]
++ Groupbox:SetVisible(Visible: boolean), Groupbox:Show(), Groupbox:Hide()
++ Groupbox:AddTabbox()
++ Collapse Groupbox arrow (disable with DisableCollapsing option)
++ TitleColor, DescriptionColor options for Library:Notify({ ... })
++ Library.Scheme.BackgroundImage and "Background Image" option in Theme Manager
++ Library.Window
+
+[changes]
++ Tabbox:AddTab() now returns Tab and TabStoringIndex
++ Window BackgroundImage can now be set even when it was previously not set during creation
+
+[fixes]
++ Fixed searching restoring hidden elements each time
++ Fixed attempt to index nil with 'Destroy' errors in Dropdown:BuildDropdownList()
++ Fixed rounded corners with Tab buttons inside Tabbox
++ Fixed Tab button spacing when it doesn't have name
+```
+
 ## 26.06.2026
 
 ```diff
@@ -7,6 +89,7 @@
 + KeyPicker for buttons (Only works with 'Press' mode, Callback to the button will have an passed value FromKeyPicker which will be true if it was activated by the key picker)
 + Icon and IconPosition parameters to Library:AddDraggableLabel() and Library:AddDraggableButton()
 + Slider.AllowRightClickInput (right click/double tap to open text input for specific value)
++ Library:AddDraggableImageButton()
 
 [changes]
 + Implemented individual rounded corners for certain elements (dropdowns, right-click context menus)
