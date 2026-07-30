@@ -2110,7 +2110,7 @@ function Library:AddDraggableLabel(...)
         end
     end
 
-    Draggable[Text] = DraggableLabel
+    table.insert(Draggable, DraggableLabel)
     return DraggableLabel
 end
 
