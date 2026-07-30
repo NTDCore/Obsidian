@@ -1199,7 +1199,7 @@ type IconModule = {
 
 local FetchIcons, Icons = pcall(function()
     return (loadstring(
-        game:HttpGet("https://raw.githubusercontent.com/deividcomsono/lucide-roblox-direct/refs/heads/main/source.lua")
+        game:HttpGet("https://gitlab.com/upio/lucide-roblox-direct/-/raw/main/source.lua")
     ) :: () -> IconModule)()
 end)
 
@@ -3575,6 +3575,26 @@ do
             end
         end
 
+        function KeyPicker:RunChanged(IsKeyValid, KeyCode)
+            if IsKeyValid == nil or KeyCode == nil then
+                IsKeyValid, KeyCode = pcall(function()
+                    if KeyPicker.Value == "None" then
+                        return nil
+                    end
+
+                    if SpecialKeys[KeyPicker.Value] == nil then
+                        return Enum.KeyCode[KeyPicker.Value]
+                    end
+
+                    return SpecialKeys[KeyPicker.Value]
+                end)
+            end
+
+            local NewModifiers = ConvertToInputModifiers(KeyPicker.Modifiers)
+            Library:SafeCallback(KeyPicker.ChangedCallback, KeyCode, NewModifiers)
+            Library:SafeCallback(KeyPicker.Changed, KeyCode, NewModifiers)
+        end
+
         function KeyPicker:SetValue(Data)
             local Key, Mode, Modifiers = Data[1], Data[2], Data[3]
 
@@ -3609,11 +3629,8 @@ do
                 ModeButtons[Mode]:Select()
             end
 
-            local NewModifiers = ConvertToInputModifiers(KeyPicker.Modifiers)
-            Library:SafeCallback(KeyPicker.ChangedCallback, KeyCode, NewModifiers)
-            Library:SafeCallback(KeyPicker.Changed, KeyCode, NewModifiers)
-
             KeyPicker:Update()
+            KeyPicker:RunChanged(IsKeyValid, KeyCode)
         end
 
         function KeyPicker:SetText(Text)
@@ -4253,11 +4270,14 @@ do
             }, ", ")
         end
 
-        function ColorPicker:Update()
-            ColorPicker:Display()
-
+        function ColorPicker:RunChanged()
             Library:SafeCallback(ColorPicker.Callback, ColorPicker.Value)
             Library:SafeCallback(ColorPicker.Changed, ColorPicker.Value)
+        end
+
+        function ColorPicker:Update()
+            ColorPicker:Display()
+            ColorPicker:RunChanged()
         end
 
         function ColorPicker:OnChanged(Func)
@@ -5221,6 +5241,11 @@ do
             Toggle.Changed = Func
         end
 
+        function Toggle:RunChanged()
+            Library:SafeCallback(Toggle.Callback, Toggle.Value)
+            Library:SafeCallback(Toggle.Changed, Toggle.Value)
+        end
+
         function Toggle:SetValue(Value)
             if Toggle.Disabled then
                 return
@@ -5246,8 +5271,7 @@ do
             Library:UpdateDependencyBoxes()
 
             if not Toggle.AnyKeyPickerPicking then
-                Library:SafeCallback(Toggle.Callback, Toggle.Value)
-                Library:SafeCallback(Toggle.Changed, Toggle.Value)
+                Toggle:RunChanged()
             end
         end
 
@@ -5502,6 +5526,11 @@ do
             Toggle.Changed = Func
         end
 
+        function Toggle:RunChanged()
+            Library:SafeCallback(Toggle.Callback, Toggle.Value)
+            Library:SafeCallback(Toggle.Changed, Toggle.Value)
+        end
+
         function Toggle:SetValue(Value)
             if Toggle.Disabled then
                 return
@@ -5527,8 +5556,7 @@ do
             Library:UpdateDependencyBoxes()
 
             if not Toggle.AnyKeyPickerPicking then
-                Library:SafeCallback(Toggle.Callback, Toggle.Value)
-                Library:SafeCallback(Toggle.Changed, Toggle.Value)
+                Toggle:RunChanged()
             end
         end
 
@@ -5738,6 +5766,11 @@ do
             Input.Changed = Func
         end
 
+        function Input:RunChanged()
+            Library:SafeCallback(Input.Callback, Input.Value)
+            Library:SafeCallback(Input.Changed, Input.Value)
+        end
+
         function Input:SetValue(Text)
             if not Input.AllowEmpty and Trim(Text) == "" then
                 Text = Input.EmptyReset
@@ -5761,8 +5794,7 @@ do
             Box.Text = Text
 
             if not Input.Disabled then
-                Library:SafeCallback(Input.Callback, Input.Value)
-                Library:SafeCallback(Input.Changed, Input.Value)
+                Input:RunChanged()
             end
         end
 
@@ -6061,6 +6093,11 @@ do
             Slider:Display()
         end
 
+        function Slider:RunChanged()
+            Library:SafeCallback(Slider.Callback, Slider.Value)
+            Library:SafeCallback(Slider.Changed, Slider.Value)
+        end
+
         function Slider:SetValue(Str)
             if Slider.Disabled then
                 return
@@ -6076,8 +6113,7 @@ do
             Slider.Value = Num
             Slider:Display()
 
-            Library:SafeCallback(Slider.Callback, Slider.Value)
-            Library:SafeCallback(Slider.Changed, Slider.Value)
+            Slider:RunChanged()
         end
 
         function Slider:SetDisabled(Disabled: boolean)
@@ -6218,8 +6254,7 @@ do
 
                 Slider:Display()
                 if Slider.Value ~= OldValue then
-                    Library:SafeCallback(Slider.Callback, Slider.Value)
-                    Library:SafeCallback(Slider.Changed, Slider.Value)
+                    Slider:RunChanged()
                 end
 
                 RunService.RenderStepped:Wait()
@@ -6734,8 +6769,7 @@ do
                         Dropdown:Display()
 
                         Library:UpdateDependencyBoxes()
-                        Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
-                        Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
+                        Dropdown:RunChanged()
                     end)
 
                     if Info.Multi and Dropdown.DragSelect and not Library.IsMobile then
@@ -6775,8 +6809,7 @@ do
                                 end
 
                                 Library:UpdateDependencyBoxes()
-                                Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
-                                Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
+                                Dropdown:RunChanged()
 
                                 StopDragSelect()
                             end))
@@ -6794,6 +6827,11 @@ do
             end
 
             Dropdown:RecalculateListSize(Count)
+        end
+
+        function Dropdown:RunChanged()
+            Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
+            Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
         end
 
         function Dropdown:SetValue(Value)
@@ -6824,8 +6862,7 @@ do
 
             if not Dropdown.Disabled then
                 Library:UpdateDependencyBoxes()
-                Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
-                Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
+                Dropdown:RunChanged()
             end
         end
 
