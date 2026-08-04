@@ -1199,12 +1199,12 @@ type IconModule = {
 
 local FetchIcons, Icons = pcall(function()
     return (loadstring(
-        game:HttpGet("https://gitlab.com/upio/lucide-roblox-direct/-/raw/main/source.lua")
+        game:HttpGet("https://raw.githubusercontent.com/mstudio45/lucide-roblox-direct/refs/heads/main/source.lua")
     ) :: () -> IconModule)()
 end)
 
 function Library:GetIcon(IconName: string)
-    if not FetchIcons then
+    if not FetchIcons or not Icons then
         return
     end
 
@@ -9150,16 +9150,19 @@ function Library:CreateWindow(WindowInfo)
         local Name = nil
         local Icon = nil
         local Description = nil
+        local Order = nil
 
         if select("#", ...) == 1 and typeof(...) == "table" then
             local Info = select(1, ...)
             Name = Info.Name or "Tab"
             Icon = Info.Icon
             Description = Info.Description
+            Order = Info.Order
         else
             Name = select(1, ...)
             Icon = select(2, ...)
             Description = select(3, ...)
+            Order = select(4, ...)
         end
 
         local TabButton: TextButton
@@ -9178,6 +9181,7 @@ function Library:CreateWindow(WindowInfo)
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 0, 40),
                 Text = "",
+                LayoutOrder = Order,
                 Parent = Tabs,
             })
             local ButtonPadding = New("UIPadding", {
@@ -10216,6 +10220,10 @@ function Library:CreateWindow(WindowInfo)
             if not Visible and Library.ActiveTab == Tab then
                 Tab:Hide()
             end
+        end
+
+        function Tab:SetOrder(Order: number)
+            TabButton.LayoutOrder = Order
         end
 
         function Tab:Destroy()
