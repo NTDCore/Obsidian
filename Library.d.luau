@@ -1,5 +1,5 @@
 --!strict
--- Last updated: 2026-07-05
+-- Last updated: 25.08.2026
 -- Luau type definitions for the Obsidian UI Library
 
 --// Helper & Configuration Types
@@ -58,6 +58,7 @@ export type Notification = {
     TitleColor: Color3?,
     DescriptionColor: Color3?,
     Destroyed: boolean,
+    PositionInitialized: boolean?,
 
     Resize: (self: Notification) -> (),
     ChangeTitle: (self: Notification, Text: string) -> (),
@@ -105,6 +106,7 @@ export type ButtonInfo = {
     Text: string,
     Func: (FromKeyPicker: boolean?) -> (),
     DoubleClick: boolean?,
+    Icon: string?,
     Tooltip: string?,
     DisabledTooltip: string?,
     Risky: boolean?,
@@ -164,16 +166,21 @@ export type SliderInfo = {
 
 export type DropdownInfo = {
     Text: string?,
-    Values: { any },
+    Values: { [any]: any },
     Default: any,
     DisabledValues: { any }?,
+    ValueImages: { [any]: string }?,
     Multi: boolean?,
+    DragSelect: boolean?,
     MaxVisibleDropdownItems: number?,
+    KeepDisabledValuePosition: boolean?,
     SpecialType: "Player" | "Team"?,
     ExcludeLocalPlayer: boolean?,
+    EnablePlayerImages: boolean?,
     AllowNull: boolean?,
     Searchable: boolean?,
     FormatDisplayValue: ((any) -> string)?,
+    FormatListValue: ((any) -> string)?,
     Tooltip: string?,
     DisabledTooltip: string?,
     Callback: ((any) -> ())?,
@@ -236,6 +243,7 @@ export type ColorPickerInfo = {
     Default: Color3?,
     Transparency: number?,
     Title: string?,
+    Resizable: boolean?,
     Callback: ((Color3) -> ())?,
     Changed: ((Color3) -> ())?,
 }
@@ -251,6 +259,7 @@ export type LoadingInfo = {
     TotalSteps: number?,
     ShowSidebar: boolean?,
     AutoResizeHeight: boolean?,
+    AlwaysOnTop: boolean?,
     WindowWidth: number?,
     WindowHeight: number?,
     ContentWidth: number?,
@@ -270,6 +279,7 @@ export type KeyPicker = {
     Clicked: () -> (),
     Type: "KeyPicker",
     Menu: ContextMenu,
+    MenuVisible: boolean,
 
     Display: (self: KeyPicker) -> (),
     Update: (self: KeyPicker) -> (),
@@ -279,6 +289,7 @@ export type KeyPicker = {
     DoClick: (self: KeyPicker) -> (),
     SetValue: (self: KeyPicker, Data: { string }) -> (),
     SetText: (self: KeyPicker, Text: string) -> (),
+    SetMenuVisibility: (self: KeyPicker, Visible: boolean) -> (),
     Destroy: (self: KeyPicker) -> (),
 }
 
@@ -316,6 +327,7 @@ export type Label = {
     TextLabel: TextLabel,
     Container: GuiObject,
     Holder: TextLabel,
+    Parent: BaseGroupbox,
 
     SetVisible: (self: Label, Visible: boolean) -> (),
     SetText: (self: Label, Text: string) -> (),
@@ -330,6 +342,7 @@ export type Button = {
     Text: string,
     Func: (FromKeyPicker: boolean?) -> (),
     DoubleClick: boolean?,
+    Icon: string?,
     Tooltip: string?,
     DisabledTooltip: string?,
     TooltipTable: Tooltip?,
@@ -340,14 +353,18 @@ export type Button = {
     Type: "Button",
     Base: TextButton,
     Stroke: UIStroke,
+    Label: TextLabel,
+    IconImage: ImageLabel?,
     Holder: Frame,
     SubButton: SubButton?,
+    Parent: BaseGroupbox,
 
     AddButton: (self: Button, Info: ButtonInfo | string, Func: (() -> ())?, Idx: string?) -> SubButton,
     UpdateColors: (self: Button) -> (),
     SetDisabled: (self: Button, Disabled: boolean) -> (),
     SetVisible: (self: Button, Visible: boolean) -> (),
     SetText: (self: Button, Text: string) -> (),
+    SetIcon: (self: Button, Icon: string?) -> (),
     Destroy: (self: Button) -> (),
 }
 
@@ -355,6 +372,7 @@ export type SubButton = {
     Text: string,
     Func: (FromKeyPicker: boolean?) -> (),
     DoubleClick: boolean?,
+    Icon: string?,
     Tooltip: string?,
     DisabledTooltip: string?,
     TooltipTable: Tooltip?,
@@ -365,11 +383,14 @@ export type SubButton = {
     Type: "SubButton",
     Base: TextButton,
     Stroke: UIStroke,
+    Label: TextLabel,
+    IconImage: ImageLabel?,
 
     UpdateColors: (self: SubButton) -> (),
     SetDisabled: (self: SubButton, Disabled: boolean) -> (),
     SetVisible: (self: SubButton, Visible: boolean) -> (),
     SetText: (self: SubButton, Text: string) -> (),
+    SetIcon: (self: SubButton, Icon: string?) -> (),
     Destroy: (self: SubButton) -> (),
 }
 
@@ -389,6 +410,7 @@ export type Toggle = {
     TextLabel: TextLabel,
     Container: GuiObject,
     Holder: TextButton,
+    Parent: BaseGroupbox,
 
     UpdateColors: (self: Toggle) -> (),
     Display: (self: Toggle) -> (),
@@ -468,13 +490,20 @@ export type Slider = {
 }
 
 export type Dropdown = {
+    Connections: { RBXScriptConnection },
+    Destroyed: boolean,
+
     Text: string?,
     Value: { [any]: boolean } | any,
-    Values: { any },
+    Values: { [any]: any },
     DisabledValues: { any },
+    ValueImages: { [any]: string }?,
     Multi: boolean,
+    DragSelect: boolean,
+    KeepDisabledValuePosition: boolean,
     SpecialType: "Player" | "Team"?,
     ExcludeLocalPlayer: boolean?,
+    EnablePlayerImages: boolean?,
     Tooltip: string?,
     DisabledTooltip: string?,
     TooltipTable: Tooltip?,
@@ -485,21 +514,28 @@ export type Dropdown = {
     Type: "Dropdown",
     Menu: ContextMenu,
     Holder: Frame,
+    Default: { any },
+    DefaultValues: { [any]: any },
 
     RecalculateListSize: (self: Dropdown, Count: number?) -> (),
     UpdateColors: (self: Dropdown) -> (),
     Display: (self: Dropdown) -> (),
     OnChanged: (self: Dropdown, Func: (Value: any) -> ()) -> (),
-    GetActiveValues: (self: Dropdown) -> { any } | number,
+    GetActiveValues: (self: Dropdown, ReturnCount: boolean?) -> { any } | number,
+    RefreshPool: (self: Dropdown) -> (),
     BuildDropdownList: (self: Dropdown) -> (),
+    RunChanged: (self: Dropdown) -> (),
     SetValue: (self: Dropdown, Value: any) -> (),
-    SetValues: (self: Dropdown, Values: { any }) -> (),
-    AddValues: (self: Dropdown, Values: { any } | string) -> (),
+    SetValues: (self: Dropdown, Values: { [any]: any }) -> (),
+    AddValues: (self: Dropdown, Values: { [any]: any } | string) -> (),
     SetDisabledValues: (self: Dropdown, DisabledValues: { any }) -> (),
     AddDisabledValues: (self: Dropdown, DisabledValues: { any } | string) -> (),
+    SetValueImages: (self: Dropdown, ValueImages: { [any]: string }) -> (),
+    AddValueImages: (self: Dropdown, ValueImages: { [any]: string }) -> (),
     SetDisabled: (self: Dropdown, Disabled: boolean) -> (),
     SetVisible: (self: Dropdown, Visible: boolean) -> (),
     SetText: (self: Dropdown, Text: string) -> (),
+    SetDragSelect: (self: Dropdown, Value: boolean) -> (),
     Destroy: (self: Dropdown) -> (),
 }
 
@@ -582,6 +618,7 @@ export type UIPassthrough = {
 export type Divider = {
     Type: "Divider",
     Holder: Frame,
+    Parent: BaseGroupbox,
     Destroy: (self: Divider) -> (),
 }
 
@@ -611,7 +648,7 @@ export type Option =
 
 --// Container Types
 export type BaseGroupbox = {
-    AddDivider: (self: Groupbox, MarginTop: number?, MarginBottom: number?) -> (),
+    AddDivider: (self: Groupbox, Info: (string | { Text: string?, Margin: number?, MarginTop: number?, MarginBottom: number? })?) -> (),
     AddLabel: (
         self: Groupbox,
         Info: { Text: string, DoesWrap: boolean?, Size: number?, Visible: boolean?, Idx: string? } | string,
@@ -665,6 +702,16 @@ export type DependencyGroupbox = BaseGroupbox & {
 }
 
 export type Groupbox = BaseGroupbox & {
+    Name: string?,
+    Description: string?,
+    Visible: boolean,
+    Collapsed: boolean,
+    PoppedOut: boolean,
+    PopOutEnabled: boolean,
+    PopOutFloat: Frame?,
+    PopOutPlaceholder: Frame?,
+    PopOutMaxHeight: number?,
+    PopOutWidth: number?,
     BoxHolder: Frame,
     Holder: Frame,
     Container: Frame,
@@ -673,14 +720,22 @@ export type Groupbox = BaseGroupbox & {
     Elements: { [number]: Element },
 
     Resize: (self: Groupbox) -> (),
+    SetDescription: (self: Groupbox, Description: string?) -> (),
     SetCollapsed: (self: Groupbox, Collapsed: boolean) -> (),
     ToggleCollapsed: (self: Groupbox) -> (),
+    SetPoppedOut: (self: Groupbox, Value: boolean, FloatPosition: UDim2?) -> (),
+    TogglePoppedOut: (self: Groupbox) -> (),
+    RefreshPopOutPlaceholder: (self: Groupbox) -> (),
+    SetMaxPopOutHeight: (self: Groupbox, Height: number?) -> (),
+    SetPopOutWidth: (self: Groupbox, Width: number?) -> (),
 }
 
 export type SubTab = BaseGroupbox & {
+    Type: "SubTab",
     ButtonHolder: TextButton,
     Container: Frame,
     Tab: Tab,
+    Tabbox: Tabbox,
     Elements: { [number]: Element },
     DependencyBoxes: { [number]: DependencyBox },
 
@@ -690,12 +745,29 @@ export type SubTab = BaseGroupbox & {
 }
 
 export type Tabbox = {
+    Type: "Tabbox",
+    Visible: boolean,
+    Destroyed: boolean,
+    PoppedOut: boolean,
+    PopOutEnabled: boolean,
+    PopOutFloat: Frame?,
+    PopOutPlaceholder: Frame?,
+    PopOutMaxHeight: number?,
+    PopOutWidth: number?,
     ActiveTab: SubTab?,
     BoxHolder: Frame,
     Holder: Frame,
     Tabs: { [string]: SubTab },
+    ParentBox: (Groupbox | SubTab)?,
 
     AddTab: (self: Tabbox, Name: string, IconName: string?) -> (SubTab, number),
+    Resize: (self: Tabbox) -> (),
+    UpdateCorners: (self: Tabbox) -> (),
+    SetPoppedOut: (self: Tabbox, Value: boolean, FloatPosition: UDim2?) -> (),
+    TogglePoppedOut: (self: Tabbox) -> (),
+    RefreshPopOutPlaceholder: (self: Tabbox) -> (),
+    SetMaxPopOutHeight: (self: Tabbox, Height: number?) -> (),
+    SetPopOutWidth: (self: Tabbox, Width: number?) -> (),
 }
 
 export type Tab = {
@@ -705,6 +777,8 @@ export type Tab = {
     DependencyGroupboxes: { [number]: DependencyGroupbox },
     Sides: { ScrollingFrame },
     WarningBox: { IsNormal: boolean, LockSize: boolean, Visible: boolean, Title: string, Text: string },
+    Tooltip: string?,
+    TooltipTable: Tooltip?,
 
     UpdateWarningBox: (
         self: Tab,
@@ -714,12 +788,16 @@ export type Tab = {
     AddGroupbox: (
         self: Tab,
         Info: {
-            Side: number,
+            Side: number | string,
             Name: string,
             IconName: string?,
+            Description: string?,
             Visible: boolean?,
             Collapsed: boolean?,
             DisableCollapsing: boolean?,
+            PopOut: boolean?,
+            MaxPopOutHeight: number?,
+            PopOutWidth: number?,
         }
     ) -> Groupbox,
     AddLeftGroupbox: (
@@ -738,7 +816,7 @@ export type Tab = {
         Collapsed: boolean?,
         DisableCollapsing: boolean?
     ) -> Groupbox,
-    AddTabbox: (self: Tab, Info: { Side: number, Name: string? }) -> Tabbox,
+    AddTabbox: (self: Tab, Info: { Side: number | string, Name: string?, PopOut: boolean?, MaxPopOutHeight: number?, PopOutWidth: number? }) -> Tabbox,
     AddLeftTabbox: (self: Tab, Name: string?) -> Tabbox,
     AddRightTabbox: (self: Tab, Name: string?) -> Tabbox,
     Hover: (self: Tab, Hovering: boolean) -> (),
@@ -746,6 +824,7 @@ export type Tab = {
     Hide: (self: Tab) -> (),
     SetVisible: (self: Tab, Visible: boolean) -> (),
     SetOrder: (self: Tab, Order: number) -> (),
+    SetTooltip: (self: Tab, Text: string?) -> (),
 }
 
 export type KeyTab = BaseGroupbox & {
@@ -753,6 +832,8 @@ export type KeyTab = BaseGroupbox & {
     IsKeyTab: true,
     Window: Window,
     Container: ScrollingFrame,
+    Tooltip: string?,
+    TooltipTable: Tooltip?,
 
     AddKeyBox: (self: KeyTab, ExpectedKey: string?, Callback: (Success: boolean, Key: string) -> ()) -> (),
     Resize: (self: KeyTab) -> (),
@@ -760,6 +841,7 @@ export type KeyTab = BaseGroupbox & {
     Show: (self: KeyTab) -> (),
     Hide: (self: KeyTab) -> (),
     SetVisible: (self: KeyTab, Visible: boolean) -> (),
+    SetTooltip: (self: KeyTab, Text: string?) -> (),
 }
 
 export type LoadingErrorButtonInfo = {
@@ -789,6 +871,7 @@ export type Loading = {
     TotalSteps: number,
     ShowSidebar: boolean,
     AutoResizeHeight: boolean,
+    AlwaysOnTop: boolean,
     IsError: boolean,
     Destroyed: boolean,
     WindowWidth: number,
@@ -842,6 +925,8 @@ export type Dialog = {
 
 
 export type Window = {
+    AlwaysOnTop: boolean,
+    Snapping: boolean?,
     IsSidebarCompacted: (self: Window) -> boolean,
     GetSidebarWidth: (self: Window) -> number,
     SetSidebarWidth: (self: Window, Width: number) -> (),
@@ -850,14 +935,14 @@ export type Window = {
     HideTabInfo: (self: Window) -> (),
     AddTab: (
         self: Window,
-        Info: { Name: string, Icon: string?, Description: string?, Order: number? } | string,
+        Info: { Name: string, Icon: string?, Description: string?, Tooltip: string?, Order: number? } | string,
         Icon: string?,
         Description: string?,
         Order: number?
     ) -> Tab,
     AddKeyTab: (
         self: Window,
-        Info: { Name: string, Icon: string?, Description: string? } | string,
+        Info: { Name: string, Icon: string?, Description: string?, Tooltip: string?, Order: number? } | string,
         Icon: string?,
         Description: string?
     ) -> KeyTab,
@@ -878,13 +963,21 @@ export type Window = {
     ChangeTitle: (self: Window, Title: string) -> (),
     SetBackgroundImage: (self: Window, Image: string) -> (),
     SetFooter: (self: Window, Footer: string) -> (),
+    SetAlwaysOnTop: (self: Window, Enabled: boolean) -> (),
     SetCornerRadius: (self: Window, Radius: number) -> (),
+    SetSnapping: (
+        self: Window,
+        Enabled: boolean,
+        Distance: number?,
+        Margin: number?,
+        AvoidCoreGui: boolean?
+    ) -> (),
     SetAnimations: (
         self: Window,
         Animations: { [string]: boolean }?,
         TabTransitionTime: number?,
         TabSwipeOffset: number?,
-        TabSwipeFrom: ("left" | "right" | "top" | "bottom" | string)?
+        TabSwipeFrom: ("left" | "right" | "top" | "bottom" | "auto" | string)?
     ) -> (),
     Toggle: (self: Window, Value: boolean?) -> (),
 }
@@ -898,6 +991,8 @@ export type Library = {
     IsRobloxFocused: boolean,
     ScreenGui: ScreenGui?,
     Window: Window?,
+    Floats: Frame?,
+    Overlay: Frame?,
     SearchText: string,
     Searching: boolean,
     GlobalSearch: boolean,
@@ -919,7 +1014,9 @@ export type Library = {
     Animations: {
         ToggleWindow: boolean,
         TabSwitch: boolean,
+        Groupbox: boolean,
         Dropdown: boolean,
+        KeyPicker: boolean,
     },
     Toggled: boolean,
     Unloaded: boolean,
@@ -934,6 +1031,9 @@ export type Library = {
     NotifyOnError: boolean,
     CantDragForced: boolean,
     DraggableElements: { GuiObject },
+    PopOutSnapDistance: number,
+    PopOutDragThreshold: number,
+    PopOutHoldTime: number,
     Signals: { [number]: RBXScriptConnection },
     UnloadSignals: { [number]: () -> () },
     MinSize: Vector2,
@@ -962,10 +1062,27 @@ export type Library = {
     GiveSignal: (self: Library, Connection: RBXScriptConnection) -> RBXScriptConnection,
     GetIcon: (self: Library, IconName: string) -> Icon?,
     GetCustomIcon: (self: Library, IconName: string) -> Icon?,
+    ApplyLucideIcon: (
+        self: Library,
+        ImageGui: ImageLabel | ImageButton,
+        Icon: Icon,
+        Rotation: number?
+    ) -> (),
     Validate: (self: Library, Table: { [string]: any }, Template: { [string]: any }) -> { [string]: any },
-    ResetCursorIcon: (self: Library) -> (),
+    Cursor: {
+        ChangeCrossColor: (self: Library, Color: Color3) -> (),
+        ResetCross: (self: Library) -> (),
+        ChangeIcon: (self: Library, ImageId: string) -> (),
+        ChangeIconColor: (self: Library, Color: Color3) -> (),
+        ChangeIconSize: (self: Library, Size: UDim2) -> (),
+        ResetIcon: (self: Library) -> (),
+    },
+    ChangeCursorCrossColor: (self: Library, Color: Color3) -> (),
+    ResetCursorCross: (self: Library) -> (),
     ChangeCursorIcon: (self: Library, ImageId: string) -> (),
+    ChangeCursorIconColor: (self: Library, Color: Color3) -> (),
     ChangeCursorIconSize: (self: Library, Size: UDim2) -> (),
+    ResetCursorIcon: (self: Library) -> (),
     GetBetterColor: (self: Library, Color: Color3, Add: number) -> Color3,
     GetLighterColor: (self: Library, Color: Color3) -> Color3,
     GetDarkerColor: (self: Library, Color: Color3) -> Color3,
@@ -1044,6 +1161,7 @@ export type Library = {
     SetIconModule: (self: Library, module: any) -> (),
     SetFont: (self: Library, FontFace: Font | Enum.Font) -> (),
     SetNotifySide: (self: Library, Side: "Left" | "Right") -> (),
+    UpdateNotificationPositions: (self: Library, Snap: boolean?) -> (),
     Notify: (
         self: Library,
         Info: {
@@ -1083,6 +1201,7 @@ export type Library = {
             CornerRadius: number?,
             NotifySide: "Left" | "Right"?,
             ShowCustomCursor: boolean?,
+            AlwaysOnTop: boolean?,
             Font: Font | Enum.Font?,
             ToggleKeybind: Enum.KeyCode?,
             ShowMobileButtons: boolean?,
@@ -1097,14 +1216,28 @@ export type Library = {
             SidebarCompactWidth: number?,
             SidebarCollapseThreshold: number?,
             CompactWidthActivation: number?,
+            Snapping: boolean?,
+            SnapDistance: number?,
+            SnapMargin: number?,
+            SnapAvoidCoreGui: boolean?,
             Animations: {
                 ToggleWindow: boolean?,
                 TabSwitch: boolean?,
+                Groupbox: boolean?,
                 Dropdown: boolean?,
+                KeyPicker: boolean?,
             }?,
             TabTransitionTime: number?,
             TabSwipeOffset: number?,
-            TabSwipeFrom: ("left" | "right" | "top" | "bottom" | string)?,
+            TabSwipeFrom: ("left" | "right" | "top" | "bottom" | "auto" | string)?,
+            TabButtonsStyle: {
+                Gap: number?,
+                Padding: number?,
+                CornerRadius: number?,
+                Indicator: boolean?,
+                IndicatorWidth: number?,
+                IndicatorHeight: number?,
+            }?,
         }
     ) -> Window,
     Toggle: (self: Library, Value: boolean?) -> (),

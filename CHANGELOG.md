@@ -1,3 +1,152 @@
+## 28.09.2026
+
+```diff
+[features]
++ Icon, SetIcon for Buttons and SubButtons
++ AddTabbox for Tabbox tabs (SubTab:AddTabbox)
+
+[changes]
++ Tabbox tabs now have Type "SubTab"
++ Tabbox.ParentBox can now be a Groupbox or a SubTab
++ Button and SubButton text moved from Base to a new Label (TextLabel), Base.Text is now empty
+
+[fixed]
++ Fixed window footer growing thicker with CornerRadius
++ Fixed tab buttons scrollbar being visible on higher DPI scales
+```
+
+## 20.09.2026
+
+```diff
+[features]
++ KeepDisabledValuePosition for Dropdown (keeps DisabledValues in their Values order instead of moving them to the end)
++ SetMaxPopOutHeight(MaxHeight: number) for popout groupboxes and tabboxes
++ SetPopOutWidth(Width: number) for popout groupboxes and tabboxes
++ KeyPicker:SetMenuVisibility(Visible: boolean)
+
+[fixed]
++ Fixed text and UI elements sizing incorrectly at different DPI scales or screen resolutions
++ Fixed dropdown arrows overlapping the footer when scrolling
+```
+
+## 04.09.2026
+
+```diff
+[features]
++ TabButtonsStyle for CreateWindow (Gap, Padding, CornerRadius, Indicator, IndicatorWidth, IndicatorHeight)
++ Library.Cursor:ChangeCrossColor(Color)
++ Library.Cursor:ResetCross()
++ Library.Cursor:ChangeIcon(ImageId)
++ Library.Cursor:ChangeIconColor(Color)
++ Library.Cursor:ChangeIconSize(Size)
++ Library.Cursor:ResetIcon()
++ Library.Cursor:ResetCursor()
+
+[changes]
++ Library:ChangeCursorCrossColor, ResetCursorCross, ChangeCursorIcon, ChangeCursorIconColor, ChangeCursorIconSize and ResetCursorIcon are deprecated; use Library.Cursor instead
+
+[fixed]
++ Fixed KeyPickers not updating visually when toggled from the keybind menu
+```
+
+## 31.08.2026
+
+```diff
+[features]
++ Tooltip support for tab buttons
+
+[changes]
++ ColorPickers use the smallest possible size on Mobile now
++ SetValue will now set the Value but will not run the Callbacks when the element is disabled
++ Search now switches to the tab with the most prominent match
+
+[fixed]
++ Fixed notifications resizing incorrectly
++ Fixed Toggle and Lock buttons on mobile impossible to click
++ Fixed KeyPickers and ColorPickers still able to be changed while disabled in the UI
++ Fixed KeyPickers and ColorPickers not updating visually if they are disabled or not
+```
+
+## 25.08.2026
+
+```diff
+[features]
++ Library:ApplyLucideIcon(ImageGui: ImageLabel | ImageButton, Icon: LucideIcon, Rotation: number?)
++ Groupbox/Tabbox pop-out into draggable element (enabled by default)
++ Tabbox and Groupbox :SetPoppedOut, :TogglePoppedOut
++ Fuzzy matching for sidebar and dropdown search
++ Window snapping to screen edges/center (Snapping, SnapAvoidCoreGui, SnapDistance, SnapMargin)
++ Window:SetSnapping(Enabled, Distance?, Margin?)
++ Automatic WCAG contrast checking for themes
+
+[changes]
++ Dropdown search results are sorted by best match
++ Matching a Tab/Groupbox name in search reveals all of its contents
++ ZIndex changed to Siblings mode
++ Increased the maximum width for Button KeyPickers
++ Escape dismisses open menus/dialogs and releases text input focus (without toggling the window)
++ AccentColor focus-border tween applied to all text inputs
++ Hover feedback on KeyBox Execute and KeyPicker key display buttons
+
+[fixes]
++ Fixed Tab:SetOrder()
++ Fixed Dropdown:SetValueImages()
++ Fixed KeyPicker sliding animation sometimes causing errors
++ Fixed Button KeyPickers not resizing properly to fit the text
++ Fixed mouse icon state not reverting properly
++ Fixed corner radiuses not properly changing with Dropdowns, KeyPickers, ColorPickers and certain Context Menus
+```
+
+## 23.08.2026
+
+```diff
+[features]
++ Import/Export Theme and Configuration JSON through the UI
+```
+
+## 20.08.2026
+
+```diff
+[features]
++ Groupbox Descriptions, Groupbox:SetDescription()
+
+[changes]
++ :AddLeftGroupbox(...) and :AddRightGroupbox(...) are now deprecated; use :AddGroupbox({ ... }) instead
+```
+
+## 17.08.2026
+
+```diff
+[features]
++ ColorPicker.Resizable
++ Window.AlwaysOnTop, Window:SetAlwaysOnTop, Loading.AlwaysOnTop
+
+[changes]
++ TextBox focus now tweens the border between OutlineColor and AccentColor
++ Added Hover highlights on Dropdown items, KeyPicker mode-select buttons, and ColorPicker context menu items
+
+[fixes]
++ Implemented MinContainerWidth properly
+```
+
+## 12.08.2026
+
+```diff
+[features]
++ Large dropdown lists are now virtualized for faster opens and lower instance count
++ Dropdowns no longer crash the game with over 10,000 values
++ Dictionary Values support: key = selection identity, value = display label
++ Dropdown:SetValues now prunes stale selections that are no longer in Values
+
+[changes]
++ Dropdown.DisabledValues and Dropdown.ValueImages now accept dictionary keys or labels
++ Dropdown:AddValues on dictionary Values merges maps (or key=label for arrays)
++ Sparse numeric tables are treated as arrays (value identity), not dictionaries
+
+[fixes]
++ Multi-dropdown dictionary keys no longer stripped to display labels (Issue #109)
+```
+
 ## 11.07.2026
 
 ```diff
