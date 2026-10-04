@@ -6187,7 +6187,7 @@ do
             ParentObj.Addons = {}
         end
 
-        table.insert(ParentObj.Addons, ColorPicker)
+        ParentObj.Addons[Idx] = ColorPicker
 
         ColorPicker.Default = ColorPicker.Value
 
@@ -6217,10 +6217,10 @@ do
             end
 
             if ParentObj and ParentObj.Addons then
-                local AddonIdx = table.find(ParentObj.Addons, ColorPicker)
+                local AddonIdx = ParentObj.Addons[Idx]
 
                 if AddonIdx then
-                    table.remove(ParentObj.Addons, AddonIdx)
+                    ParentObj.Addons[Idx] = nil
                 end
             end
 
